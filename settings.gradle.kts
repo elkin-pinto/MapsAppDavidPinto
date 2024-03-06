@@ -13,6 +13,8 @@ dependencyResolutionManagement {
     }
 }
 
+
+
 rootProject.name = "MapsAppDavidPinto"
 include(":app")
  

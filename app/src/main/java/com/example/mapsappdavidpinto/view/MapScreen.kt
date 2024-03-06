@@ -1,19 +1,115 @@
 package com.example.mapsappdavidpinto.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import com.example.mapsappdavidpinto.model.Colors
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
+import com.google.maps.android.compose.MarkerState
+import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun MapScreen(navController: NavController, vM: MainViewModel) {
     Column (
-        modifier = Modifier.fillMaxSize().padding(16.dp)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        val itb = LatLng(41.45)
+        val show = vM.show.observeAsState(false)
+        val cameraPositionState = rememberCameraPositionState {
+            position = CameraPosition.fromLatLngZoom(LatLng(41.4534265,2.1837151), 10f)
+        }
+        GoogleMap (
+            modifier = Modifier.fillMaxSize(),
+            cameraPositionState = cameraPositionState,
+            onMapLongClick = {
+                vM.lat.value = it.latitude.toString()
+                vM.lng.value = it.longitude.toString()
+                vM.show.value = true
+            }
+        )
+        {
+            vM.markers.value?.forEach {
+                Marker(
+                    state = MarkerState(position = it.state),
+                    title = it.title,
+                    snippet = it.snippet
+                )
+            }
+            NewMarker(vM,show.value)
+
+        }
+
     }
+}
+@Composable
+fun NewMarker(vM:MainViewModel,show:Boolean){
+    val lat = vM.lat.observeAsState("")
+    val lng = vM.lng.observeAsState("")
+    val title = vM.title.observeAsState("")
+
+    if (show) {
+        Dialog(
+            onDismissRequest = { vM.show.value = false },
+        ) {
+            Column(
+                Modifier
+                    .background(Colors.background.color)
+                    .padding(24.dp)
+                    .fillMaxWidth()) {
+                NumeredTextField(vM.lat,"Enter Lat coordinates",lat)
+                NumeredTextField(vM.lng,"Enter Lng coordinates",lng)
+                MyTextField(vM.title,title)
+
+                Button(onClick = {
+                    try {
+                        vM.newMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!)
+                        vM.show.value = false
+                    } catch (e: Exception) {
+                        println(e.message)
+                        vM.lat.value = ""
+                        vM.lng.value = ""
+                        vM.title.value = ""
+                    }
+                }) {
+                    Text("Create Marker")
+                }
+
+            }
+        }
+    }
+}
+
+@Composable
+fun MyTextField (title:MutableLiveData<String>,value:State<String>){
+    TextField(value = value.value, onValueChange = {  title.value = it },
+        label = { Text(text = "The marker name") },
+    )
+}
+
+@Composable
+fun NumeredTextField (cords:MutableLiveData<String>,label:String,value:State<String>) {
+    TextField(value = value.value, onValueChange = {  cords.value = it },
+        label = { Text(text = label) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    )
 }

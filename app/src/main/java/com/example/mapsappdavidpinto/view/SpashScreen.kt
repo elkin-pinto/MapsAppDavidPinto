@@ -40,7 +40,7 @@ fun SplashScreen(navController: NavController,vM:MainViewModel) {
         startAnimation = true
         delay(4000)
         navController.popBackStack()
-        navController.navigate(Routes.LoginScreen.route)
+        navController.navigate(Routes.MapScreen.route)
     }
     Splash(alphaAnim.value,vM.icon)
 }

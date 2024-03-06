@@ -48,6 +48,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildToolsVersion = "34.0.0"
 }
 
 dependencies {
@@ -86,7 +87,7 @@ dependencies {
 
 secrets {
     propertiesFileName = "secrets.properties"
-    defaultPropertiesFileName = "local.defaults.properties"
+    defaultPropertiesFileName = "local.properties"
     ignoreList.add("keyToIgnore")
     ignoreList.add("sdk.*")
 }
