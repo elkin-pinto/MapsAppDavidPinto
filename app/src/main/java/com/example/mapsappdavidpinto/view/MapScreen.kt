@@ -29,10 +29,13 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun MapScreen(navController: NavController, vM: MainViewModel) {
+    MyScaffold(navController,vM.bottomNavigationItems) { Map(navController, vM) }
+}
+@Composable
+fun Map(navController: NavController, vM: MainViewModel) {
     Column (
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
     ) {
         val show = vM.show.observeAsState(false)
         val cameraPositionState = rememberCameraPositionState {
@@ -56,16 +59,16 @@ fun MapScreen(navController: NavController, vM: MainViewModel) {
                 )
             }
             NewMarker(vM,show.value)
-
         }
-
     }
 }
+
+
 @Composable
 fun NewMarker(vM:MainViewModel,show:Boolean){
-    val lat = vM.lat.observeAsState("")
-    val lng = vM.lng.observeAsState("")
+
     val title = vM.title.observeAsState("")
+    val description = vM.snippet.observeAsState("")
 
     if (show) {
         Dialog(
@@ -76,19 +79,18 @@ fun NewMarker(vM:MainViewModel,show:Boolean){
                     .background(Colors.background.color)
                     .padding(24.dp)
                     .fillMaxWidth()) {
-                NumeredTextField(vM.lat,"Enter Lat coordinates",lat)
-                NumeredTextField(vM.lng,"Enter Lng coordinates",lng)
-                MyTextField(vM.title,title)
+
+                MyTextField(vM.title,title,"The marker name")
+                MyTextField(vM.snippet,description,"The marker description")
 
                 Button(onClick = {
                     try {
-                        vM.newMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!)
+                        vM.newMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!)
                         vM.show.value = false
                     } catch (e: Exception) {
                         println(e.message)
-                        vM.lat.value = ""
-                        vM.lng.value = ""
                         vM.title.value = ""
+                        vM.snippet.value = ""
                     }
                 }) {
                     Text("Create Marker")
@@ -100,16 +102,10 @@ fun NewMarker(vM:MainViewModel,show:Boolean){
 }
 
 @Composable
-fun MyTextField (title:MutableLiveData<String>,value:State<String>){
+fun MyTextField (title:MutableLiveData<String>,value:State<String>,m1:String){
     TextField(value = value.value, onValueChange = {  title.value = it },
-        label = { Text(text = "The marker name") },
+        label = { Text(text = m1) },
     )
 }
 
-@Composable
-fun NumeredTextField (cords:MutableLiveData<String>,label:String,value:State<String>) {
-    TextField(value = value.value, onValueChange = {  cords.value = it },
-        label = { Text(text = label) },
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-    )
-}
+

@@ -6,9 +6,9 @@ class MyMarker {
     val state:LatLng
     val title:String
     val snippet:String
-    constructor(state:LatLng,title:String) {
+    constructor(state:LatLng,title:String,snippet:String) {
         this.state = state
         this.title = title
-        this.snippet = "Marker at $title"
+        this.snippet = snippet
     }
 }

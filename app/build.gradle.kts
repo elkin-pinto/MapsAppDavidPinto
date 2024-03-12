@@ -66,7 +66,8 @@ dependencies {
 
     //SearchBar
     implementation("androidx.compose.material3:material3:1.2.0")
-
+    //BottomNavigation
+    implementation("androidx.compose.material:material:1.6.1")
 
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
