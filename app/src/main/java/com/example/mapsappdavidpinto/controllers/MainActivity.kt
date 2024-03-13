@@ -9,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mapsappdavidpinto.ui.theme.MapsAppDavidPintoTheme
-import com.example.mapsappdavidpinto.view.AddMarkerListScreen
+import com.example.mapsappdavidpinto.view.AddMarkerScreen
 import com.example.mapsappdavidpinto.view.LoginScreen
 import com.example.mapsappdavidpinto.view.MapScreen
 import com.example.mapsappdavidpinto.view.MarkerListScreen
@@ -42,7 +42,7 @@ fun Body(vM:MainViewModel) {
         composable(Routes.RegusterScreen.route) { RegusterScreen(navigationController,vM) }
         composable(Routes.MapScreen.route) { MapScreen(navigationController,vM) }
         composable(Routes.MarkerListScreen.route) { MarkerListScreen(navigationController,vM) }
-        composable(Routes.AddMarkerListScreen.route) { AddMarkerListScreen(navigationController,vM) }
+        composable(Routes.AddMarkerListScreen.route) { AddMarkerScreen(navigationController,vM) }
     }
 }
 

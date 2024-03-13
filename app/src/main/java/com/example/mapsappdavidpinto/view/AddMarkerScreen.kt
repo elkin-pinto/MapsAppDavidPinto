@@ -5,6 +5,6 @@ import androidx.navigation.NavController
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 @Composable
-fun AddMarkerListScreen(navController: NavController, vM: MainViewModel) {
+fun AddMarkerScreen(navController: NavController, vM: MainViewModel) {
 
 }
