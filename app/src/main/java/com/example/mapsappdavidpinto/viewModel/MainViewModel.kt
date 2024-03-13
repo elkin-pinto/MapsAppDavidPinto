@@ -11,7 +11,7 @@ import java.util.regex.Pattern
 class MainViewModel:ViewModel() {
     val icon = R.drawable.splash_screen_icon
 
-    private val _markers = MutableLiveData<List<MyMarker>>(listOf(MyMarker(LatLng(41.4534265,2.1837151),"itb","Marked at itb","escola")))
+    private val _markers = MutableLiveData<List<MyMarker>>(listOf(MyMarker(LatLng(41.4534265,2.1837151),"itb","Marker at itb","escola")))
     val markers = _markers
     private val _markersList = MutableLiveData<List<MyMarker>>()
     val markersList = _markersList
@@ -46,11 +46,11 @@ class MainViewModel:ViewModel() {
     }
 
     fun searchMarkers(value:String) {
-        val patter = Pattern.compile("$value.*")
+        val patter = Pattern.compile("${value.toLowerCase()}.*")
         try {
             val listmarkers = mutableListOf<MyMarker>()
             for(i in markers.value!!){
-                if (tipus.value == "" || i.tipus == tipus.value && patter.matcher(i.title).matches()) {
+                if ((tipus.value == "" || i.tipus == tipus.value) && patter.matcher(i.title).matches()) {
                     listmarkers.add(i)
                 }
             }
