@@ -17,6 +17,11 @@ class MainViewModel:ViewModel() {
     val markersList = _markersList
     var show = MutableLiveData(false)
 
+
+    //Map Position Values
+    var latPosition = 41.4534265
+    var lngPosition = 2.1837151
+
     //SearchBar
     var searchBarMarkersList = MutableLiveData("")
 
@@ -37,6 +42,11 @@ class MainViewModel:ViewModel() {
     var title = MutableLiveData<String>("")
     var snippet = MutableLiveData<String>("")
     var tipus = MutableLiveData<String>("")
+
+    // Maker Detail
+    lateinit var markerSelected:MyMarker
+
+
 
 
     fun newMarker(state: LatLng, title:String,snippet:String,tipus:String) {

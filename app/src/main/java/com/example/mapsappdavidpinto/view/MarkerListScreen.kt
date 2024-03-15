@@ -29,11 +29,11 @@ import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 @Composable
 fun MarkerListScreen(navController: NavController, vM: MainViewModel) {
-    MyScaffold(navController, vM.bottomNavigationItems,) { List(navController,vM) }
+    MyScaffold(navController, vM.bottomNavigationItems,) { Screen(navController,vM) }
 }
 
 @Composable
-fun List(navController: NavController,vM:MainViewModel) {
+private fun Screen(navController: NavController,vM:MainViewModel) {
     val markers by vM.markersList.observeAsState(emptyList())
     val text by vM.searchBarMarkersList.observeAsState("")
     vM.searchMarkers(text)
@@ -52,7 +52,7 @@ fun List(navController: NavController,vM:MainViewModel) {
             }
             Box(
                 Modifier
-                    .fillMaxHeight()
+                    .fillMaxHeight(0.96f)
                     .fillMaxWidth(0.98f), contentAlignment = Alignment.BottomEnd) {
                 AddMarkerButton(navController)
             }
@@ -64,7 +64,7 @@ fun List(navController: NavController,vM:MainViewModel) {
 }
 
 @Composable
-fun markerItem(marker: MyMarker) {
+private fun markerItem(marker: MyMarker) {
     Spacer(Modifier.height(5.dp))
     Box(modifier = Modifier
         .border(BorderStroke(2.dp, Color.Black))
