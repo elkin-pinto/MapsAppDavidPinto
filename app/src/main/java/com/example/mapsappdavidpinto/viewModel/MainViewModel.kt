@@ -25,9 +25,16 @@ class MainViewModel:ViewModel() {
     //SearchBar
     var searchBarMarkersList = MutableLiveData("")
 
+    //Camera
+    val cameraPermissionGranted = MutableLiveData(false)
+    val shouldShowPermissionRationale = MutableLiveData(false)
+    val showPermissionDenied = MutableLiveData(false)
+
+    //Map Dialog
+    var mapDialog = MutableLiveData(false)
 
     //TipusMarkers
-    val tipusMarkerList = listOf("","escola")
+    val tipusMarkerList = mutableListOf("","escola")
 
     //Bottom Navigation
     val bottomNavigationItems = listOf(
@@ -37,8 +44,8 @@ class MainViewModel:ViewModel() {
 
 
     // Dialog MapScreen
-    var lat = MutableLiveData<String>("")
-    var lng = MutableLiveData<String>("")
+    var lat = MutableLiveData(0.0)
+    var lng = MutableLiveData(0.0)
     var title = MutableLiveData<String>("")
     var snippet = MutableLiveData<String>("")
     var tipus = MutableLiveData<String>("")

@@ -14,12 +14,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.mapsappdavidpinto.controllers.Routes
+import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 @Composable
-fun AddMarkerButton(navHost:NavController) {
+fun AddMarkerButton(vM:MainViewModel,navHost:NavController) {
     Box(contentAlignment = Alignment.Center) {
-        Icon(Icons.Default.AddCircle, "Add Marker Cirlce" , Modifier.size(60.dp).clickable {  navHost.navigate(Routes.AddMarkerListScreen.route) },Color.Green)
-        Icon(Icons.Default.Add, "Add Marker Cross" , Modifier.size(45.dp).clickable {  navHost.navigate(Routes.AddMarkerListScreen.route) },Color.White)
-
+        Icon(Icons.Default.AddCircle, "Add Marker Cirlce" , Modifier.size(60.dp).clickable {
+            vM.lat.value = 0.0
+            vM.lng.value = 0.0
+            navHost.navigate(Routes.AddMarkerListScreen.route) },Color.Green)
+        Icon(Icons.Default.Add, "Add Marker Cross" , Modifier.size(45.dp).clickable {
+            vM.lat.value = 0.0
+            vM.lng.value = 0.0
+            navHost.navigate(Routes.AddMarkerListScreen.route) },Color.White)
     }
 }

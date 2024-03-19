@@ -47,8 +47,8 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
             } catch (e: Exception) {
                 println(e.message)
             }finally {
-                vM.lat.value = ""
-                vM.lng.value = ""
+                vM.lat.value = 0.0
+                vM.lng.value = 0.0
                 vM.title.value = ""
                 vM.snippet.value = ""
                 vM.tipus.value = ""

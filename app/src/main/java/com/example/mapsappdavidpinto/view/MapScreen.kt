@@ -41,8 +41,8 @@ private fun Screen(navController: NavController, vM: MainViewModel) {
                 modifier = Modifier.fillMaxSize(),
                 cameraPositionState = cameraPositionState,
                 onMapLongClick = {
-                    vM.lat.value = it.latitude.toString()
-                    vM.lng.value = it.longitude.toString()
+                    vM.lat.value = it.latitude
+                    vM.lng.value = it.longitude
                     vM.show.value = true
                 }
             )
@@ -69,7 +69,7 @@ private fun Screen(navController: NavController, vM: MainViewModel) {
                 Modifier
                     .fillMaxHeight(0.8f)
                     .fillMaxWidth(0.98f), contentAlignment = Alignment.BottomEnd) {
-                AddMarkerButton(navController)
+                AddMarkerButton(vM,navController)
             }
         }
 

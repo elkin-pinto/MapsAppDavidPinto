@@ -54,7 +54,7 @@ private fun Screen(navController: NavController,vM:MainViewModel) {
                 Modifier
                     .fillMaxHeight(0.96f)
                     .fillMaxWidth(0.98f), contentAlignment = Alignment.BottomEnd) {
-                AddMarkerButton(navController)
+                AddMarkerButton(vM,navController)
             }
         }
     }
