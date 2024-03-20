@@ -10,12 +10,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mapsappdavidpinto.ui.theme.MapsAppDavidPintoTheme
 import com.example.mapsappdavidpinto.view.AddMarkerScreen
+import com.example.mapsappdavidpinto.view.GalleryScreen
 import com.example.mapsappdavidpinto.view.LoginScreen
 import com.example.mapsappdavidpinto.view.MapScreen
 import com.example.mapsappdavidpinto.view.MarkerListScreen
 import com.example.mapsappdavidpinto.view.MenuScreen
+import com.example.mapsappdavidpinto.view.PermissionDeclinedScreen
 import com.example.mapsappdavidpinto.view.RegusterScreen
 import com.example.mapsappdavidpinto.view.SplashScreen
+import com.example.mapsappdavidpinto.view.TakePhotoScreen
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 class MainActivity : ComponentActivity() {
@@ -43,6 +46,9 @@ fun Body(vM:MainViewModel) {
         composable(Routes.MapScreen.route) { MapScreen(navigationController,vM) }
         composable(Routes.MarkerListScreen.route) { MarkerListScreen(navigationController,vM) }
         composable(Routes.AddMarkerListScreen.route) { AddMarkerScreen(navigationController,vM) }
+        composable(Routes.PermissionDeclinedScreen.route) { PermissionDeclinedScreen() }
+        composable(Routes.TakePhotoScreen.route) { TakePhotoScreen(navigationController,vM) }
+        composable(Routes.GalleryScreen.route) { GalleryScreen(navigationController,vM) }
     }
 }
 

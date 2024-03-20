@@ -14,8 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import com.example.mapsappdavidpinto.R
 import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 import com.google.android.gms.maps.model.LatLng
@@ -39,7 +42,7 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
 
         Button(onClick = {
             try {
-                vM.newMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!)
+                vM.newMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value!!)
                 vM.latPosition = vM.lat.value!!.toDouble()
                 vM.lngPosition = vM.lng.value!!.toDouble()
                 vM.show.value = false
@@ -52,6 +55,7 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
                 vM.title.value = ""
                 vM.snippet.value = ""
                 vM.tipus.value = ""
+                vM.image.value = R.drawable.empty_image.toDrawable().toBitmap()
             }
         }, Modifier.fillMaxWidth()) {
             Text("Create Marker")

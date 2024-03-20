@@ -1,5 +1,8 @@
 package com.example.mapsappdavidpinto.viewModel
 
+import android.graphics.Bitmap
+import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mapsappdavidpinto.R
@@ -11,7 +14,7 @@ import java.util.regex.Pattern
 class MainViewModel:ViewModel() {
     val icon = R.drawable.splash_screen_icon
 
-    private val _markers = MutableLiveData<List<MyMarker>>(listOf(MyMarker(LatLng(41.4534265,2.1837151),"itb","Marker at itb","escola")))
+    private val _markers = MutableLiveData<List<MyMarker>>(listOf(MyMarker(LatLng(41.4534265,2.1837151),"itb","Marker at itb","escola",R.drawable.empty_image.toDrawable().toBitmap())))
     val markers = _markers
     private val _markersList = MutableLiveData<List<MyMarker>>()
     val markersList = _markersList
@@ -41,7 +44,7 @@ class MainViewModel:ViewModel() {
         BottomNavigationScreens.Home,
         BottomNavigationScreens.MarkerList
     )
-
+    //
 
     // Dialog MapScreen
     var lat = MutableLiveData(0.0)
@@ -50,15 +53,18 @@ class MainViewModel:ViewModel() {
     var snippet = MutableLiveData<String>("")
     var tipus = MutableLiveData<String>("")
 
+    // Marker Image
+    var image = MutableLiveData<Bitmap>(R.drawable.empty_image.toDrawable().toBitmap())
+
     // Maker Detail
     lateinit var markerSelected:MyMarker
 
 
 
 
-    fun newMarker(state: LatLng, title:String,snippet:String,tipus:String) {
+    fun newMarker(state: LatLng, title:String,snippet:String,tipus:String,image:Bitmap) {
         val newMarker = _markers.value?.toMutableList()
-        newMarker?.add(MyMarker(state,title, snippet,tipus))
+        newMarker?.add(MyMarker(state,title, snippet,tipus,image))
         _markers.value = newMarker!!
     }
 

@@ -38,6 +38,7 @@ import androidx.compose.ui.window.Dialog
 import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.navigation.NavController
 import com.example.mapsappdavidpinto.controllers.MainActivity
+import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -99,9 +100,9 @@ private fun MarkerCreateFun(vM:MainViewModel,navController: NavController) {
                 if(!isCameraPermissionGranted) {
                     launcher.launch(Manifest.permission.CAMERA)
                 }else {
-
+                    navController.navigate(Routes.TakePhotoScreen.route)
                 }
-                if (showPermissionDenied) PermissionDeclinedScreen()
+                if (showPermissionDenied) navController.navigate(Routes.PermissionDeclinedScreen.route)
             }) {
                 Icon(Icons.Filled.CameraAlt, "Location Icon" )
             }
@@ -145,9 +146,6 @@ fun CameraOption(vM:MainViewModel,navController: NavController): ManagedActivity
     return launcher
 }
 
-fun cameraLauncher() {
-
-}
 
 
 @SuppressLint("MissingPermission")
