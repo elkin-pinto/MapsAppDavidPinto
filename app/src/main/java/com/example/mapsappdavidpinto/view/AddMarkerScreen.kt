@@ -53,7 +53,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun AddMarkerScreen(navController: NavController, vM: MainViewModel) {
-    MyScaffold(navController, vM.bottomNavigationItems ) { Screen1(vM,navController) }
+    MyDrawerMenu(vM,navController) { Screen1(vM,navController) }
 }
 
 
@@ -136,13 +136,12 @@ fun CameraOption(vM:MainViewModel,navController: NavController): ManagedActivity
                      Manifest.permission.CAMERA
                  )
                  if (!shouldShowPermissionRationale) {
-                     Log.i("CameraScreen","No podemis volver a perdir permisos")
+                     Log.i("CameraScreen","No podemos volver a perdir permisos")
                      vM.showPermissionDenied.value = true
                  }
              }
         }
     )
-
     return launcher
 }
 

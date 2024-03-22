@@ -2,6 +2,7 @@ package com.example.mapsappdavidpinto.view
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,30 +25,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.model.MyMarker
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 @Composable
 fun MarkerListScreen(navController: NavController, vM: MainViewModel) {
-    MyScaffold(navController, vM.bottomNavigationItems,) { Screen(navController,vM) }
+    MyDrawerMenu(vM,navController) { Screen(navController,vM) }
 }
 
 @Composable
 private fun Screen(navController: NavController,vM:MainViewModel) {
     val markers by vM.markersList.observeAsState(emptyList())
+    val tipus = vM.tipus.observeAsState("")
     val text by vM.searchBarMarkersList.observeAsState("")
     vM.searchMarkers(text)
     Column {
         TextField(value = text, onValueChange = {
             vM.searchBarMarkersList.value = it
             vM.searchMarkers(text)}, Modifier.fillMaxWidth())
-        MyDropMenuTipus(vM)
+        MyDropMenuTipus(vM,tipus)
         Spacer(Modifier.height(10.dp))
         Box(Modifier.fillMaxSize()) {
             LazyColumn (horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxWidth()){
-
                 items(markers) {
-                    markerItem(it)
+                    markerItem(it,navController,vM)
                 }
             }
             Box(
@@ -64,12 +66,18 @@ private fun Screen(navController: NavController,vM:MainViewModel) {
 }
 
 @Composable
-private fun markerItem(marker: MyMarker) {
+private fun markerItem(marker: MyMarker,navController: NavController,vM: MainViewModel) {
     Spacer(Modifier.height(5.dp))
     Box(modifier = Modifier
         .border(BorderStroke(2.dp, Color.Black))
         .fillMaxWidth(0.8f)
-        .padding(5.dp)) {
+        .padding(5.dp)
+        .clickable {
+            vM.latPosition = marker.state.latitude
+            vM.lngPosition = marker.state.longitude
+            navController.navigate(Routes.MapScreen.route)
+        }
+    ) {
         Column {
             Text(marker.title, fontWeight = FontWeight.Bold, fontSize = 30.sp)
             Text(marker.snippet)

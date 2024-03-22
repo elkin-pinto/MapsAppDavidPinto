@@ -24,9 +24,7 @@ import com.example.mapsappdavidpinto.viewModel.MainViewModel
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val vM by viewModels<MainViewModel> ()
-
         setContent {
             MapsAppDavidPintoTheme {
                 Body(vM)
@@ -45,10 +43,10 @@ fun Body(vM:MainViewModel) {
         composable(Routes.RegusterScreen.route) { RegusterScreen(navigationController,vM) }
         composable(Routes.MapScreen.route) { MapScreen(navigationController,vM) }
         composable(Routes.MarkerListScreen.route) { MarkerListScreen(navigationController,vM) }
-        composable(Routes.AddMarkerListScreen.route) { AddMarkerScreen(navigationController,vM) }
+        composable(Routes.AddMarkerScreen.route) { AddMarkerScreen(navigationController,vM) }
         composable(Routes.PermissionDeclinedScreen.route) { PermissionDeclinedScreen() }
         composable(Routes.TakePhotoScreen.route) { TakePhotoScreen(navigationController,vM) }
-        composable(Routes.GalleryScreen.route) { GalleryScreen(navigationController,vM) }
+        composable(Routes.GalleryScreen.route) { GalleryScreen(vM) }
     }
 }
 

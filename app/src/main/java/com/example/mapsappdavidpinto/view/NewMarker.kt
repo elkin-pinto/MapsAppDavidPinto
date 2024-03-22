@@ -1,5 +1,6 @@
 package com.example.mapsappdavidpinto.view
 
+import android.graphics.BitmapFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,9 +14,8 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.mapsappdavidpinto.R
@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.LatLng
 fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composable () -> Unit){
     val title = vM.title.observeAsState("")
     val description = vM.snippet.observeAsState("")
+    val tipus = vM.tipus.observeAsState("")
+    val context = LocalContext.current
     Column(
         Modifier
             .background(Color.Transparent)
@@ -36,13 +38,13 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
 
         MyTextField(vM.title,title,"The marker name")
         MyTextField(vM.snippet,description,"The marker description")
-        MyDropMenuTipus(vM)
+        MyDropMenuTipus(vM,tipus)
 
         function()
 
         Button(onClick = {
             try {
-                vM.newMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value!!)
+                vM.newMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value)
                 vM.latPosition = vM.lat.value!!.toDouble()
                 vM.lngPosition = vM.lng.value!!.toDouble()
                 vM.show.value = false
@@ -55,7 +57,7 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
                 vM.title.value = ""
                 vM.snippet.value = ""
                 vM.tipus.value = ""
-                vM.image.value = R.drawable.empty_image.toDrawable().toBitmap()
+                vM.image.value = BitmapFactory.decodeResource(context.resources,R.drawable.empty_image)
             }
         }, Modifier.fillMaxWidth()) {
             Text("Create Marker")

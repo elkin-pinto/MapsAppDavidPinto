@@ -22,10 +22,10 @@ fun AddMarkerButton(vM:MainViewModel,navHost:NavController) {
         Icon(Icons.Default.AddCircle, "Add Marker Cirlce" , Modifier.size(60.dp).clickable {
             vM.lat.value = 0.0
             vM.lng.value = 0.0
-            navHost.navigate(Routes.AddMarkerListScreen.route) },Color.Green)
+            navHost.navigate(Routes.AddMarkerScreen.route) },Color.Green)
         Icon(Icons.Default.Add, "Add Marker Cross" , Modifier.size(45.dp).clickable {
             vM.lat.value = 0.0
             vM.lng.value = 0.0
-            navHost.navigate(Routes.AddMarkerListScreen.route) },Color.White)
+            navHost.navigate(Routes.AddMarkerScreen.route) },Color.White)
     }
 }

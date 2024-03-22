@@ -8,8 +8,8 @@ class MyMarker {
     val title:String
     val snippet:String
     val tipus:String
-    val image:Bitmap
-    constructor(state:LatLng,title:String,snippet:String,tipus:String,image:Bitmap) {
+    val image:Bitmap?
+    constructor(state:LatLng,title:String,snippet:String,tipus:String,image:Bitmap?) {
         this.state = state
         this.title = title
         this.snippet = snippet

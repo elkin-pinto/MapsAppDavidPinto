@@ -1,6 +1,7 @@
 package com.example.mapsappdavidpinto.view
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.os.Build
 import android.provider.MediaStore
@@ -31,13 +32,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.drawable.toDrawable
-import androidx.navigation.NavHostController
 import com.example.mapsappdavidpinto.R
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 @Composable
-fun GalleryScreen(navController:NavHostController, vM:MainViewModel) {
+fun GalleryScreen(vM:MainViewModel) {
     val context = LocalContext.current
     val img: Bitmap? = ContextCompat.getDrawable(context, R.drawable.empty_image)?.toBitmap()
     var bitmap by remember { mutableStateOf(img) }
@@ -61,36 +60,25 @@ fun GalleryScreen(navController:NavHostController, vM:MainViewModel) {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
+        val imageBitmap = bitmap ?: BitmapFactory.decodeResource(context.resources,R.drawable.empty_image)
         Button(
         onClick = {
             launchImage.launch("image/")
         }) {
             Text("Open Gallery")
         }
-        if (bitmap != null) {
             Image(
-                bitmap = bitmap!!.asImageBitmap(), contentDescription = null,
+                bitmap = imageBitmap.asImageBitmap(), contentDescription = null,
                 contentScale = ContentScale.Crop, modifier = Modifier
                     .clip(CircleShape)
                     .size(250.dp)
                     .background(Color.Blue)
                     .border(width = 1.dp, color = Color.White, shape = CircleShape)
             )
-        }
-        else {
-            Image(
-                bitmap = ContextCompat.getDrawable(context, R.drawable.empty_image)?.toBitmap()!!.asImageBitmap(), contentDescription = null,
-                contentScale = ContentScale.Crop, modifier = Modifier
-                    .clip(CircleShape)
-                    .size(250.dp)
-                    .background(Color.Blue)
-                    .border(width = 1.dp, color = Color.White, shape = CircleShape)
-            )
-        }
         Button(onClick = {
-            vM.image.value = if (bitmap == null) R.drawable.empty_image.toDrawable().toBitmap() else bitmap
+            vM.image.value = imageBitmap
         }) {
-            Text("Comfirm Photo")
+            Text("Confirm Photo")
         }
     }
 }

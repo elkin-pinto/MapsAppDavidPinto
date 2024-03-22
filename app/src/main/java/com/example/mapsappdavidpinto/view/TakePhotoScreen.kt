@@ -78,7 +78,10 @@ fun TakePhotoScreen(navController: NavController, vM: MainViewModel,) {
                 }
                 IconButton(onClick = {
                     takePhoto(context,controller) {
-                        /*TODO*/
+                        takePhoto(context, controller) {
+                            vM.image.value = it
+                            navController.navigate(Routes.AddMarkerScreen.route)
+                        }
                     }
                 }) {
                     Icon(Icons.Default.PhotoCamera, contentDescription = "Take photo")

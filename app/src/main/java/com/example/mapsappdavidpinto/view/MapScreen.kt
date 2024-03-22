@@ -24,7 +24,7 @@ fun MapScreen(navController: NavController, vM: MainViewModel) {
     vM.title.value = ""
     vM.snippet.value = ""
     vM.tipus.value = ""
-    MyScaffold(navController,vM.bottomNavigationItems) { Screen(navController, vM) }
+    MyDrawerMenu(vM,navController) { Screen(navController, vM) }
 }
 @Composable
 private fun Screen(navController: NavController, vM: MainViewModel) {
