@@ -46,7 +46,7 @@ fun Body(vM:MainViewModel) {
         composable(Routes.AddMarkerScreen.route) { AddMarkerScreen(navigationController,vM) }
         composable(Routes.PermissionDeclinedScreen.route) { PermissionDeclinedScreen() }
         composable(Routes.TakePhotoScreen.route) { TakePhotoScreen(navigationController,vM) }
-        composable(Routes.GalleryScreen.route) { GalleryScreen(vM) }
+        composable(Routes.GalleryScreen.route) { GalleryScreen(vM,navigationController) }
     }
 }
 

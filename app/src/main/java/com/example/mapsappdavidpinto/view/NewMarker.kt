@@ -1,6 +1,5 @@
 package com.example.mapsappdavidpinto.view
 
-import android.graphics.BitmapFactory
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,15 +9,14 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
-import com.example.mapsappdavidpinto.R
 import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 import com.google.android.gms.maps.model.LatLng
@@ -27,8 +25,7 @@ import com.google.android.gms.maps.model.LatLng
 fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composable () -> Unit){
     val title = vM.title.observeAsState("")
     val description = vM.snippet.observeAsState("")
-    val tipus = vM.tipus.observeAsState("")
-    val context = LocalContext.current
+    val tipus by vM.tipus.observeAsState("")
     Column(
         Modifier
             .background(Color.Transparent)
@@ -57,7 +54,7 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
                 vM.title.value = ""
                 vM.snippet.value = ""
                 vM.tipus.value = ""
-                vM.image.value = BitmapFactory.decodeResource(context.resources,R.drawable.empty_image)
+                vM.image.value = null
             }
         }, Modifier.fillMaxWidth()) {
             Text("Create Marker")
