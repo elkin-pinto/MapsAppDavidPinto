@@ -1,5 +1,6 @@
 package com.example.mapsappdavidpinto.view
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.os.Build
@@ -29,14 +30,19 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
+import com.example.mapsappdavidpinto.R
 import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
+@SuppressLint("ObsoleteSdkInt")
 @Composable
 fun GalleryScreen(vM:MainViewModel,navController: NavController) {
     val context = LocalContext.current
-    var bitmap:Bitmap? by remember { mutableStateOf(null) }
+    val img: Bitmap? = ContextCompat.getDrawable(context, R.drawable.empty_image)?.toBitmap()
+    var bitmap:Bitmap? by remember { mutableStateOf(img) }
     val launchImage = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
         , onResult = {

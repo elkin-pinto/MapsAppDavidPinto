@@ -141,6 +141,7 @@ fun CameraOption(vM:MainViewModel,navController: NavController): ManagedActivity
         onResult = { isGranted ->
              if (isGranted) {
                  vM.cameraPermissionGranted.value = true
+                 navController.navigate(Routes.TakePhotoScreen.route)
              }else {
                  vM.shouldShowPermissionRationale.value = shouldShowRequestPermissionRationale(
                      context as Activity,

@@ -1,13 +1,17 @@
 package com.example.mapsappdavidpinto.viewModel
 
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mapsappdavidpinto.R
 import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.model.BottomNavigationScreens
+import com.example.mapsappdavidpinto.model.FirebaseRep
 import com.example.mapsappdavidpinto.model.MyMarker
+import com.example.mapsappdavidpinto.model.User
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.firestore.DocumentChange
 import java.util.regex.Pattern
 
 class MainViewModel:ViewModel() {
@@ -79,6 +83,52 @@ class MainViewModel:ViewModel() {
             _markersList.value = listmarkers
 
         } catch (_:Exception) {}
+    }
+
+    //Firebase
+    private val firebaseRep = FirebaseRep()
+
+    val userList = MutableLiveData<List<User>>()
+    val actualUser = MutableLiveData<User?>()
+    val userName = MutableLiveData<String>()
+    val age = MutableLiveData<String>()
+
+    fun getUsers() {
+        firebaseRep.getUsers().addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.e("Firestore.error", error.message.toString())
+                return@addSnapshotListener
+            }
+            val tempList = mutableListOf<User>()
+            for (dc: DocumentChange in value?.documentChanges!!) {
+                if (dc.type == DocumentChange.Type.ADDED) {
+                    val newUser = dc.document.toObject(User::class.java)
+                    newUser.userId = dc.document.id
+                    tempList.add(newUser)
+                }
+            }
+            userList.value = tempList
+        }
+    }
+
+    fun getUser(userId:String) {
+        firebaseRep.getUser(userId).addSnapshotListener { value, error ->
+            if (error != null) {
+                Log.w("UserRepository","Lsiten failed", error)
+                return@addSnapshotListener
+            }
+            if (value != null && value.exists()) {
+                val user = value.toObject(User::class.java)
+                if (user != null) {
+                    user.userId = userId
+                }
+                actualUser.value = user
+                userName.value = actualUser.value!!.userName
+                age.value = actualUser.value!!.age.toString()
+            } else {
+                Log.e("UserRepository", "Current data: null")
+            }
+        }
     }
 
 

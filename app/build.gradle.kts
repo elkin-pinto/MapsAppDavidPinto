@@ -1,7 +1,10 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    //Maps
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    //Firebase
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -68,6 +71,15 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.1")
     //BottomNavigation
     implementation("androidx.compose.material:material:1.6.3")
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
+        //Cloud Firebase
+        implementation("com.google.firebase:firebase-firestore-ktx")
+        //Firebase Storage
+        implementation ("com.google.firebase:firebase-storage-ktx")
+
+
 
     //Camera
     implementation("androidx.camera:camera-core:1.3.2")
