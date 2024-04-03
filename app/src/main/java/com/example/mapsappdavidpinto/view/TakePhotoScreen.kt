@@ -69,6 +69,7 @@ fun TakePhotoScreen(navController: NavController, vM: MainViewModel,) {
     ) {
         Box(contentAlignment = Alignment.BottomEnd,modifier = Modifier.fillMaxSize()) {
             Row (
+
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.fillMaxWidth()
