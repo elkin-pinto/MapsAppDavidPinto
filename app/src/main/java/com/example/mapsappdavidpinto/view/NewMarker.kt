@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.example.mapsappdavidpinto.controllers.Routes
+import com.example.mapsappdavidpinto.model.MyMarker
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 import com.google.android.gms.maps.model.LatLng
 
@@ -41,10 +42,13 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
 
         Button(onClick = {
             try {
-                vM.newMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value)
+                val marker = MyMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value)
+                vM.newMarker(marker)
                 vM.latPosition = vM.lat.value!!.toDouble()
                 vM.lngPosition = vM.lng.value!!.toDouble()
                 vM.show.value = false
+                vM.insertMarker(marker)
+
                 navController.navigate(Routes.MapScreen.route)
             } catch (e: Exception) {
                 println(e.message)

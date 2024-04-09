@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:294995088627:android:69a3bde559530216f95386",
+        "android_client_info": {
+          "package_name": "com.example.mapsappdavidpinto"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVMNs8kg58Af1cEG_PLkna_gfJXQxVODM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:294995088627:android:f4932b08f19a8eb2f95386",
         "android_client_info": {
           "package_name": "com.example.mapsappdavidpinto.view"

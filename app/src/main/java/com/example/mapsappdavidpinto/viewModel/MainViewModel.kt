@@ -11,7 +11,9 @@ import com.example.mapsappdavidpinto.model.FirebaseRep
 import com.example.mapsappdavidpinto.model.MyMarker
 import com.example.mapsappdavidpinto.model.User
 import com.google.android.gms.maps.model.LatLng
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.FirebaseFirestore
 import java.util.regex.Pattern
 
 class MainViewModel:ViewModel() {
@@ -65,9 +67,9 @@ class MainViewModel:ViewModel() {
     // Maker Detail
     lateinit var markerSelected:MyMarker
 
-    fun newMarker(state: LatLng, title:String,snippet:String,tipus:String,image:Bitmap?) {
+    fun newMarker(marker: MyMarker) {
         val newMarker = _markers.value?.toMutableList()
-        newMarker?.add(MyMarker(state,title, snippet,tipus,image))
+        newMarker?.add(MyMarker(marker.state,marker.title, marker.snippet,marker.tipus,marker.image))
         _markers.value = newMarker!!
     }
 
@@ -87,6 +89,7 @@ class MainViewModel:ViewModel() {
 
     //Firebase
     private val firebaseRep = FirebaseRep()
+    private val database = FirebaseFirestore.getInstance()
 
     val userList = MutableLiveData<List<User>>()
     val actualUser = MutableLiveData<User?>()
@@ -131,5 +134,63 @@ class MainViewModel:ViewModel() {
         }
     }
 
+    fun addUser(user:User) = firebaseRep.addUser(user)
+
+    fun editUser(user:User) = firebaseRep.addUser(user)
+
+    fun deleteUser(userId:String) = firebaseRep.deleteUser(userId)
+    // Authentication
+    private val auth = FirebaseAuth.getInstance()
+
+    private val _goToNext = MutableLiveData<Boolean>()
+    val userLoggingComplete = MutableLiveData(false)
+
+    private fun modifiyProcessing() {
+        userLoggingComplete.value = true
+    }
+    fun register(username: String, password: String) {
+        auth.createUserWithEmailAndPassword(username,password)
+            .addOnCompleteListener {task ->
+                if (task.isSuccessful) {
+                    _goToNext.value = false
+                } else {
+                    Log.d("Error","Error creating user ${task.result}")
+                }
+                modifiyProcessing()
+            }
+    }
+
+    val _userId = MutableLiveData<String>()
+    val _loggedUser = MutableLiveData<String>()
+
+    fun login(username:String?, password: String?) {
+        auth.signInWithEmailAndPassword(username!!,password!!)
+            .addOnCompleteListener {task ->
+                if (task.isSuccessful) {
+                    _userId.value = task.result.user?.uid
+                    _loggedUser.value = task.result.user?.email?.split("@")?.get(0)
+                    _goToNext.value = true
+                } else {
+                    _goToNext.value = false
+                    Log.d("Error","Error signing in ${task.result}")
+                }
+                modifiyProcessing()
+            }
+    }
+
+    fun logOut() {
+        auth.signOut()
+    }
+
+    fun insertMarker(marker:MyMarker) {
+        database.collection("markers")
+            .add(
+                hashMapOf(
+                    "tittle" to marker.title,
+                    "snippet" to marker.snippet,
+                    "image" to marker.image
+                )
+            )
+    }
 
 }

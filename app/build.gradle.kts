@@ -81,6 +81,7 @@ dependencies {
 
 
 
+
     //Camera
     implementation("androidx.camera:camera-core:1.3.2")
     implementation("androidx.camera:camera-camera2:1.3.2")
@@ -93,6 +94,9 @@ dependencies {
 
     //More Icons
     implementation("androidx.compose.material:material-icons-extended-android:1.6.3")
+
+    //Authentication
+    implementation ("com.firebaseui:firebase-ui-auth:7.2.0")
 
     //PREMISSIONS
     implementation("com.google.accompanist:accompanist-permissions:0.28.0")
