@@ -1,15 +1,18 @@
 package com.example.mapsappdavidpinto.model
 
-import android.graphics.Bitmap
 import com.google.android.gms.maps.model.LatLng
 
-class MyMarker {
-    val state:LatLng
-    val title:String
-    val snippet:String
-    val tipus:String
-    val image:Bitmap?
-    constructor(state:LatLng,title:String,snippet:String,tipus:String,image:Bitmap?) {
+data class MyMarker (
+    var markerId: String?,
+    var state:LatLng,
+    var title:String,
+    var snippet:String,
+    var tipus:String,
+    var image:String
+    ) {
+
+    constructor(): this(null, LatLng(0.0, 0.0),"","","","")
+    constructor(state:LatLng,title:String,snippet:String,tipus:String,image:String) : this() {
         this.state = state
         this.title = title
         this.snippet = snippet

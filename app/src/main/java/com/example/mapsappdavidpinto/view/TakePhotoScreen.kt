@@ -74,16 +74,17 @@ fun TakePhotoScreen(navController: NavController, vM: MainViewModel,) {
                 horizontalArrangement = Arrangement.SpaceAround,
                 modifier = Modifier.fillMaxWidth()
             ){
+
                 IconButton(onClick = { navController.navigate(Routes.GalleryScreen.route) }) {
                     Icon(imageVector = Icons.Default.Photo, contentDescription = "Open Gallery")
                 }
                 IconButton(onClick = {
                     takePhoto(context,controller) {
                         takePhoto(context, controller) {
-                            vM.image.value = it
                             navController.navigate(Routes.AddMarkerScreen.route)
                         }
                     }
+
                 }) {
                     Icon(Icons.Default.PhotoCamera, contentDescription = "Take photo")
                 }
@@ -109,6 +110,7 @@ private fun takePhoto(context:Context,
         }
     )
 }
+
 
 @Composable
 fun CameraPreview(

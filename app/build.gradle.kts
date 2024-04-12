@@ -77,8 +77,7 @@ dependencies {
         //Cloud Firebase
         implementation("com.google.firebase:firebase-firestore-ktx")
         //Firebase Storage
-        implementation ("com.google.firebase:firebase-storage-ktx")
-
+    implementation ("com.google.firebase:firebase-storage-ktx")
 
 
 

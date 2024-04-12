@@ -1,6 +1,6 @@
 package com.example.mapsappdavidpinto.viewModel
 
-import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -9,17 +9,20 @@ import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.model.BottomNavigationScreens
 import com.example.mapsappdavidpinto.model.FirebaseRep
 import com.example.mapsappdavidpinto.model.MyMarker
-import com.example.mapsappdavidpinto.model.User
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import java.util.regex.Pattern
 
 class MainViewModel:ViewModel() {
     val icon = R.drawable.splash_screen_icon
 
-    private val _markers = MutableLiveData<List<MyMarker>>(listOf(MyMarker(LatLng(41.4534265,2.1837151),"itb","Marker at itb","escola",null)))
+    private val _markers = MutableLiveData<List<MyMarker>>(listOf(MyMarker(LatLng(41.4534265,2.1837151),"itb","Marker at itb","escola","")))
     val markers = _markers
     private val _markersList = MutableLiveData<List<MyMarker>>()
     val markersList = _markersList
@@ -62,7 +65,7 @@ class MainViewModel:ViewModel() {
     var tipus = MutableLiveData<String>("")
 
     // Marker Image
-    var image = MutableLiveData<Bitmap>()
+    var image = MutableLiveData<String>()
 
     // Maker Detail
     lateinit var markerSelected:MyMarker
@@ -91,54 +94,56 @@ class MainViewModel:ViewModel() {
     private val firebaseRep = FirebaseRep()
     private val database = FirebaseFirestore.getInstance()
 
-    val userList = MutableLiveData<List<User>>()
-    val actualUser = MutableLiveData<User?>()
-    val userName = MutableLiveData<String>()
-    val age = MutableLiveData<String>()
+    val actualMarker = MutableLiveData<MyMarker?>()
 
-    fun getUsers() {
-        firebaseRep.getUsers().addSnapshotListener { value, error ->
+    fun getMarkers() {
+        firebaseRep.getMarkers().addSnapshotListener { value, error ->
             if (error != null) {
                 Log.e("Firestore.error", error.message.toString())
                 return@addSnapshotListener
             }
-            val tempList = mutableListOf<User>()
+            val tempList = mutableListOf<MyMarker>()
             for (dc: DocumentChange in value?.documentChanges!!) {
                 if (dc.type == DocumentChange.Type.ADDED) {
-                    val newUser = dc.document.toObject(User::class.java)
-                    newUser.userId = dc.document.id
-                    tempList.add(newUser)
+                    val newMarker = dc.document.toObject(MyMarker::class.java)
+                    newMarker.markerId = dc.document.id
+                    tempList.add(newMarker)
                 }
             }
-            userList.value = tempList
+            markersList.value = tempList
         }
     }
 
-    fun getUser(userId:String) {
-        firebaseRep.getUser(userId).addSnapshotListener { value, error ->
+    fun getMarker(markerId:String) {
+        firebaseRep.getMarker(markerId).addSnapshotListener { value, error ->
             if (error != null) {
                 Log.w("UserRepository","Lsiten failed", error)
                 return@addSnapshotListener
             }
             if (value != null && value.exists()) {
-                val user = value.toObject(User::class.java)
-                if (user != null) {
-                    user.userId = userId
+                val marker = value.toObject(MyMarker::class.java)
+                if (marker != null) {
+                    marker.markerId = markerId
+                    if(marker.tipus in tipusMarkerList) tipusMarkerList.add(marker.tipus)
                 }
-                actualUser.value = user
-                userName.value = actualUser.value!!.userName
-                age.value = actualUser.value!!.age.toString()
+                actualMarker.value = marker
+                title.value = actualMarker.value!!.title
+                lat.value = actualMarker.value!!.state.latitude
+                lng.value = actualMarker.value!!.state.longitude
+                snippet.value = actualMarker.value!!.snippet
+                image.value = actualMarker.value!!.image
+                tipus.value = actualMarker.value!!.tipus
             } else {
                 Log.e("UserRepository", "Current data: null")
             }
         }
     }
 
-    fun addUser(user:User) = firebaseRep.addUser(user)
+    fun addMarker(marker:MyMarker) = firebaseRep.addMarker(marker)
 
-    fun editUser(user:User) = firebaseRep.addUser(user)
+    fun editMarker(marker:MyMarker) = firebaseRep.editMarker(marker)
 
-    fun deleteUser(userId:String) = firebaseRep.deleteUser(userId)
+    fun deleteMarker(makerId:String) = firebaseRep.deleteMarker(makerId)
     // Authentication
     private val auth = FirebaseAuth.getInstance()
 
@@ -182,15 +187,24 @@ class MainViewModel:ViewModel() {
         auth.signOut()
     }
 
-    fun insertMarker(marker:MyMarker) {
-        database.collection("markers")
-            .add(
-                hashMapOf(
-                    "tittle" to marker.title,
-                    "snippet" to marker.snippet,
-                    "image" to marker.image
-                )
-            )
-    }
 
+//Upload Image
+
+    fun uploadImage(imageUri: Uri) {
+        val formatter = SimpleDateFormat("yyyy_MM_dd_HH_mm_ss", Locale.getDefault())
+        val now = Date()
+        val fileName = formatter.format(now)
+        val storage = FirebaseStorage.getInstance().getReference("images/$fileName")
+        storage.putFile(imageUri)
+            .addOnSuccessListener {
+                Log.i("IMAGE UPLOAD", "Image uploaded successfully")
+                storage.downloadUrl.addOnSuccessListener {
+                    Log.i("IMAGE", it.toString())
+                    image.value = it.toString()
+                }
+            }
+            .addOnFailureListener {
+                Log.i("IMAGE UPLOAD", "Image upload failed")
+            }
+    }
 }

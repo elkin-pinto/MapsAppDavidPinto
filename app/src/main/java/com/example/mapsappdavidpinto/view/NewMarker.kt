@@ -42,12 +42,12 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
 
         Button(onClick = {
             try {
-                val marker = MyMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value)
+                val marker = MyMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value!!)
                 vM.newMarker(marker)
                 vM.latPosition = vM.lat.value!!.toDouble()
                 vM.lngPosition = vM.lng.value!!.toDouble()
                 vM.show.value = false
-                vM.insertMarker(marker)
+                vM.addMarker(marker)
 
                 navController.navigate(Routes.MapScreen.route)
             } catch (e: Exception) {

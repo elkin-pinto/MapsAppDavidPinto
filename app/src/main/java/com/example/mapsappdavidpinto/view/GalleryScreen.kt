@@ -3,6 +3,7 @@ package com.example.mapsappdavidpinto.view
 import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -30,10 +31,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.navigation.NavController
-import com.example.mapsappdavidpinto.R
 import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
@@ -41,11 +39,13 @@ import com.example.mapsappdavidpinto.viewModel.MainViewModel
 @Composable
 fun GalleryScreen(vM:MainViewModel,navController: NavController) {
     val context = LocalContext.current
-    val img: Bitmap? = ContextCompat.getDrawable(context, R.drawable.empty_image)?.toBitmap()
+    val img: Bitmap? = null
     var bitmap:Bitmap? by remember { mutableStateOf(img) }
+    var uri:Uri? by remember { mutableStateOf(null) }
     val launchImage = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
         , onResult = {
+            uri = it
             bitmap = if (Build.VERSION.SDK_INT < 28) {
                 MediaStore.Images.Media.getBitmap(context.contentResolver, it)
             } else {
@@ -81,8 +81,11 @@ fun GalleryScreen(vM:MainViewModel,navController: NavController) {
             )
         }
         Button(onClick = {
-            vM.image.value = bitmap
-            navController.navigate(Routes.AddMarkerScreen.route)
+            println(uri.toString())
+            if(uri != null) {
+                vM.uploadImage(uri!!)
+                navController.navigate(Routes.AddMarkerScreen.route)
+            }
         }) {
             Text("Confirm Photo")
         }

@@ -7,35 +7,41 @@ import com.google.firebase.firestore.FirebaseFirestore
 class FirebaseRep {
     private val database = FirebaseFirestore.getInstance()
 
-    fun addUser(user:User) {
-        database.collection("users").add(
+    fun addMarker(marker:MyMarker) {
+        database.collection("markers").add(
             hashMapOf(
-                "userName" to user.userName,
-                "age" to user.age,
-                "profilePicture" to user.profilePicture,
+                "title" to marker.title,
+                "image" to marker.image,
+                "snippet" to marker.snippet,
+                "lat" to marker.state.latitude,
+                "lng" to marker.state.longitude,
+                "tipus" to marker.tipus
             )
         )
     }
 
-    fun editUser(editedUser: User) {
-        database.collection("users").document(editedUser.userId!!).set(
+    fun editMarker(editedMarker:MyMarker) {
+        database.collection("markers").document(editedMarker.markerId!!).set(
             hashMapOf(
-                "userName" to editedUser.userName,
-                "age" to editedUser.age,
-                "profilePicture" to editedUser.profilePicture,
+                "title" to editedMarker.title,
+                "image" to editedMarker.image,
+                "snippet" to editedMarker.snippet,
+                "lat" to editedMarker.state.latitude,
+                "lng" to editedMarker.state.longitude,
+                "tipus" to editedMarker.tipus
             )
         )
     }
 
-    fun deleteUser(userId: String) {
-        database.collection("users").document(userId).delete()
+    fun deleteMarker(markerId: String) {
+        database.collection("markers").document(markerId).delete()
     }
 
-    fun getUsers(): CollectionReference {
-        return database.collection("users")
+    fun getMarkers(): CollectionReference {
+        return database.collection("markers")
     }
 
-    fun getUser(userId:String): DocumentReference {
-        return database.collection("users").document(userId)
+    fun getMarker(markerId:String): DocumentReference {
+        return database.collection("markers").document(markerId)
     }
 }
