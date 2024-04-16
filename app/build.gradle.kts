@@ -79,6 +79,8 @@ dependencies {
         //Firebase Storage
     implementation ("com.google.firebase:firebase-storage-ktx")
 
+    //ConstrainLayout
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
 
 
     //Camera

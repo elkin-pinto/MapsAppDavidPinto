@@ -6,6 +6,7 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -81,7 +82,7 @@ fun GalleryScreen(vM:MainViewModel,navController: NavController) {
             )
         }
         Button(onClick = {
-            println(uri.toString())
+            Log.i("Uri traviesa",uri.toString())
             if(uri != null) {
                 vM.uploadImage(uri!!)
                 navController.navigate(Routes.AddMarkerScreen.route)

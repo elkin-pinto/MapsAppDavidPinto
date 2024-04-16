@@ -9,7 +9,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +25,7 @@ import com.google.android.gms.maps.model.LatLng
 fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composable () -> Unit){
     val title = vM.title.observeAsState("")
     val description = vM.snippet.observeAsState("")
-    val tipus by vM.tipus.observeAsState("")
+    val tipus = MutableLiveData("")
     Column(
         Modifier
             .background(Color.Transparent)
@@ -36,13 +35,13 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
 
         MyTextField(vM.title,title,"The marker name")
         MyTextField(vM.snippet,description,"The marker description")
-        MyDropMenuTipus(vM,tipus)
+        MyDropMenuTipus(vM,tipus,vM.tipusMarkerList)
 
         function()
 
         Button(onClick = {
             try {
-                val marker = MyMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value!!)
+                val marker = MyMarker(LatLng(vM.lat.value!!.toDouble(),vM.lng.value!!.toDouble()),vM.title.value!!,vM.snippet.value!!,vM.tipus.value!!,vM.image.value,vM._userId.value!!)
                 vM.newMarker(marker)
                 vM.latPosition = vM.lat.value!!.toDouble()
                 vM.lngPosition = vM.lng.value!!.toDouble()

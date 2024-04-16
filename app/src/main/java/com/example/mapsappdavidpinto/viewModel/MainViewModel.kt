@@ -6,10 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mapsappdavidpinto.R
 import com.example.mapsappdavidpinto.controllers.Routes
-import com.example.mapsappdavidpinto.model.BottomNavigationScreens
 import com.example.mapsappdavidpinto.model.FirebaseRep
 import com.example.mapsappdavidpinto.model.MyMarker
-import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
 import com.google.firebase.firestore.FirebaseFirestore
@@ -22,7 +20,7 @@ import java.util.regex.Pattern
 class MainViewModel:ViewModel() {
     val icon = R.drawable.splash_screen_icon
 
-    private val _markers = MutableLiveData<List<MyMarker>>(listOf(MyMarker(LatLng(41.4534265,2.1837151),"itb","Marker at itb","escola","")))
+    private val _markers = MutableLiveData(emptyList<MyMarker>())
     val markers = _markers
     private val _markersList = MutableLiveData<List<MyMarker>>()
     val markersList = _markersList
@@ -50,13 +48,6 @@ class MainViewModel:ViewModel() {
     //TipusMarkers
     val tipusMarkerList = mutableListOf("","escola")
 
-    //Bottom Navigation
-    val bottomNavigationItems = listOf(
-        BottomNavigationScreens.Home,
-        BottomNavigationScreens.MarkerList
-    )
-    //
-
     // Dialog MapScreen
     var lat = MutableLiveData(0.0)
     var lng = MutableLiveData(0.0)
@@ -65,14 +56,13 @@ class MainViewModel:ViewModel() {
     var tipus = MutableLiveData<String>("")
 
     // Marker Image
-    var image = MutableLiveData<String>()
+    var image = MutableLiveData<String?>()
 
     // Maker Detail
-    lateinit var markerSelected:MyMarker
 
     fun newMarker(marker: MyMarker) {
         val newMarker = _markers.value?.toMutableList()
-        newMarker?.add(MyMarker(marker.state,marker.title, marker.snippet,marker.tipus,marker.image))
+        newMarker?.add(MyMarker(marker.state,marker.title, marker.snippet,marker.tipus,marker.image,marker.userId))
         _markers.value = newMarker!!
     }
 
@@ -97,7 +87,7 @@ class MainViewModel:ViewModel() {
     val actualMarker = MutableLiveData<MyMarker?>()
 
     fun getMarkers() {
-        firebaseRep.getMarkers().addSnapshotListener { value, error ->
+        firebaseRep.getMarkers().whereEqualTo("userId",_userId.value).addSnapshotListener { value, error ->
             if (error != null) {
                 Log.e("Firestore.error", error.message.toString())
                 return@addSnapshotListener
@@ -110,7 +100,7 @@ class MainViewModel:ViewModel() {
                     tempList.add(newMarker)
                 }
             }
-            markersList.value = tempList
+            _markers.value = tempList
         }
     }
 
@@ -158,6 +148,7 @@ class MainViewModel:ViewModel() {
             .addOnCompleteListener {task ->
                 if (task.isSuccessful) {
                     _goToNext.value = false
+                    this.getMarkers()
                 } else {
                     Log.d("Error","Error creating user ${task.result}")
                 }
@@ -175,6 +166,7 @@ class MainViewModel:ViewModel() {
                     _userId.value = task.result.user?.uid
                     _loggedUser.value = task.result.user?.email?.split("@")?.get(0)
                     _goToNext.value = true
+                    this.getMarkers()
                 } else {
                     _goToNext.value = false
                     Log.d("Error","Error signing in ${task.result}")

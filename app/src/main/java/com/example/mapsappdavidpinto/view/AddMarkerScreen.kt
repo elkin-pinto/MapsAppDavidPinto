@@ -32,7 +32,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -65,15 +64,16 @@ fun AddMarkerScreen(navController: NavController, vM: MainViewModel) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun Screen1 (vM: MainViewModel,navController: NavController) {
+    val image by vM.image.observeAsState(null)
     Spacer(Modifier.height(15.dp))
     Column (horizontalAlignment = Alignment.CenterHorizontally){
         Spacer(Modifier.height(15.dp))
         Text("Create Marker", fontSize = 25.sp)
         MarkerCreateFun(vM , navController)
-        if (vM.image.value != null) {
-            GlideImage(model = vM.image.value, contentDescription = "Marker Image",
+        if (image != null) {
+            GlideImage(model = image, contentDescription = "Marker Image",
                 contentScale = ContentScale.Fit,
-                modifier = Modifier.size(100.dp).rotate(90f))
+                modifier = Modifier.size(100.dp))
         }
         Text("Create Type", fontSize = 25.sp)
         Spacer(Modifier.height(15.dp))

@@ -16,19 +16,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -44,14 +52,14 @@ fun MarkerListScreen(navController: NavController, vM: MainViewModel) {
 @Composable
 private fun Screen(navController: NavController,vM:MainViewModel) {
     val markers by vM.markersList.observeAsState(emptyList())
-    val tipus by vM.tipus.observeAsState("")
+    val tipus = MutableLiveData("")
     val text by vM.searchBarMarkersList.observeAsState("")
     vM.searchMarkers(text)
     Column {
         TextField(value = text, onValueChange = {
             vM.searchBarMarkersList.value = it
             vM.searchMarkers(text)}, Modifier.fillMaxWidth())
-        MyDropMenuTipus(vM,tipus)
+        MyDropMenuTipus(vM,tipus,vM.tipusMarkerList)
         Spacer(Modifier.height(10.dp))
         Box(Modifier.fillMaxSize()) {
             LazyColumn (horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxWidth()){
@@ -72,7 +80,7 @@ private fun Screen(navController: NavController,vM:MainViewModel) {
 
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
+@OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun markerItem(marker: MyMarker,navController: NavController,vM: MainViewModel) {
     Spacer(Modifier.height(5.dp))
@@ -86,14 +94,19 @@ private fun markerItem(marker: MyMarker,navController: NavController,vM: MainVie
             navController.navigate(Routes.MapScreen.route)
         }
     ) {
+        var show by remember{ mutableStateOf(false) }
         Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Column {
                 Text(marker.title, fontWeight = FontWeight.Bold, fontSize = 30.sp)
                 Text(marker.snippet)
             }
             if (marker.image != null) {
-                GlideImage(model = marker.image, contentDescription = "Marker Value", contentScale = ContentScale.Fit, modifier = Modifier.rotate(90f).size(100.dp))
+                GlideImage(model = marker.image, contentDescription = "Marker Value", contentScale = ContentScale.Fit, modifier = Modifier.size(100.dp))
+            }
+            IconButton(onClick = { show = true}) {
+                Icon(imageVector = Icons.Filled.Settings, contentDescription = "Settings")
             }
         }
     }
 }
+

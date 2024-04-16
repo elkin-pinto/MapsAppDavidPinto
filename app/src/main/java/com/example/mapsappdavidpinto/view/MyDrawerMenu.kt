@@ -42,6 +42,13 @@ fun MyDrawerMenu(vM: MainViewModel,navigationController: NavController,function:
             NavigationDrawerItem(label = { Text("Exit")}, selected = false, onClick = {
                 scope.launch { state.close() }
             })
+            HorizontalDivider()
+            NavigationDrawerItem(label = { Text("Log Out")}, selected = false, onClick = {
+                scope.launch {
+                    vM.logOut()
+                    navigationController.navigate(Routes.LoginScreen.route)
+                }
+            })
         }
     }) {
         MyScaffold(function = {function() }, state )

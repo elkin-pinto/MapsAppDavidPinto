@@ -15,7 +15,8 @@ class FirebaseRep {
                 "snippet" to marker.snippet,
                 "lat" to marker.state.latitude,
                 "lng" to marker.state.longitude,
-                "tipus" to marker.tipus
+                "tipus" to marker.tipus,
+                "userId" to marker.userId
             )
         )
     }
@@ -28,7 +29,8 @@ class FirebaseRep {
                 "snippet" to editedMarker.snippet,
                 "lat" to editedMarker.state.latitude,
                 "lng" to editedMarker.state.longitude,
-                "tipus" to editedMarker.tipus
+                "tipus" to editedMarker.tipus,
+                "userId" to editedMarker.userId
             )
         )
     }
