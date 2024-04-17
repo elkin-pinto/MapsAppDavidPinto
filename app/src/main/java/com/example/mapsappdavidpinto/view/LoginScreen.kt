@@ -63,12 +63,9 @@ fun LoginScreen(navController: NavController, vM: MainViewModel) {
             }
             Spacer(modifier = Modifier.width(25.dp))
             OutlinedButton(onClick = {
-                try {
                         vM.register(email,password)
-                        navController.navigate(Routes.MapScreen.route)
-
-                } catch (_: Exception) { }
-                                     },
+                if(vM.userLoggingComplete.value == true) navController.navigate(Routes.MapScreen.route)
+            },
                 border = BorderStroke(2.dp, Color.Red),
                 modifier = Modifier.padding(8.dp)) {
                 Text(text = "Register")

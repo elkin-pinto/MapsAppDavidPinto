@@ -14,11 +14,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -83,6 +87,7 @@ private fun Screen(navController: NavController,vM:MainViewModel) {
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterialApi::class)
 @Composable
 private fun markerItem(marker: MyMarker,navController: NavController,vM: MainViewModel) {
+    var show by remember { mutableStateOf(false) }
     Spacer(Modifier.height(5.dp))
     Box(modifier = Modifier
         .border(BorderStroke(2.dp, Color.Black))
@@ -94,7 +99,6 @@ private fun markerItem(marker: MyMarker,navController: NavController,vM: MainVie
             navController.navigate(Routes.MapScreen.route)
         }
     ) {
-        var show by remember{ mutableStateOf(false) }
         Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
             Column {
                 Text(marker.title, fontWeight = FontWeight.Bold, fontSize = 30.sp)
@@ -105,6 +109,21 @@ private fun markerItem(marker: MyMarker,navController: NavController,vM: MainVie
             }
             IconButton(onClick = { show = true}) {
                 Icon(imageVector = Icons.Filled.Settings, contentDescription = "Settings")
+            }
+            DropdownMenu(expanded = show, onDismissRequest = { show = false }) {
+                DropdownMenuItem(onClick = { /*TODO*/ }) {
+                    Icon(Icons.Filled.Settings, contentDescription = "Edit")
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(text = "Edit")
+                }
+                DropdownMenuItem(onClick = {
+                    vM.deleteMarker(marker.markerId!!)
+                    show = false
+                }) {
+                    Icon(Icons.Filled.Delete, contentDescription = "Delete")
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(text = "Delete")
+                }
             }
         }
     }

@@ -10,7 +10,6 @@ import com.example.mapsappdavidpinto.model.FirebaseRep
 import com.example.mapsappdavidpinto.model.MyMarker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentChange
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -82,11 +81,10 @@ class MainViewModel:ViewModel() {
 
     //Firebase
     private val firebaseRep = FirebaseRep()
-    private val database = FirebaseFirestore.getInstance()
 
     val actualMarker = MutableLiveData<MyMarker?>()
 
-    fun getMarkers() {
+    private fun getMarkers() {
         firebaseRep.getMarkers().whereEqualTo("userId",_userId.value).addSnapshotListener { value, error ->
             if (error != null) {
                 Log.e("Firestore.error", error.message.toString())
@@ -128,12 +126,25 @@ class MainViewModel:ViewModel() {
             }
         }
     }
+    fun addMarker(marker:MyMarker) {
+        this.addMarkerRep(marker)
+        this.getMarkers()
+    }
+    private fun addMarkerRep(marker:MyMarker) = firebaseRep.addMarker(marker)
 
-    fun addMarker(marker:MyMarker) = firebaseRep.addMarker(marker)
+    fun editMarker(marker:MyMarker) {
+        this.editMarkerRep(marker)
+        this.getMarkers()
+    }
+    private fun editMarkerRep(marker:MyMarker) = firebaseRep.editMarker(marker)
 
-    fun editMarker(marker:MyMarker) = firebaseRep.editMarker(marker)
+    fun deleteMarker(markerId:String) {
+        this.deleteMarkerRep(markerId)
+        this.getMarkers()
+    }
+    private fun deleteMarkerRep(markerId:String) = firebaseRep.deleteMarker(markerId)
 
-    fun deleteMarker(makerId:String) = firebaseRep.deleteMarker(makerId)
+
     // Authentication
     private val auth = FirebaseAuth.getInstance()
 
@@ -149,10 +160,11 @@ class MainViewModel:ViewModel() {
                 if (task.isSuccessful) {
                     _goToNext.value = false
                     this.getMarkers()
+                    modifiyProcessing()
                 } else {
-                    Log.d("Error","Error creating user ${task.result}")
+                    Log.d("Error","Error creating user ${task.exception}")
                 }
-                modifiyProcessing()
+
             }
     }
 
@@ -167,11 +179,11 @@ class MainViewModel:ViewModel() {
                     _loggedUser.value = task.result.user?.email?.split("@")?.get(0)
                     _goToNext.value = true
                     this.getMarkers()
+                    modifiyProcessing()
                 } else {
                     _goToNext.value = false
-                    Log.d("Error","Error signing in ${task.result}")
+                    Log.d("Error","Error signing in ${task.exception}")
                 }
-                modifiyProcessing()
             }
     }
 
