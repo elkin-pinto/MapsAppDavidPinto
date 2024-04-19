@@ -21,7 +21,7 @@ class MainViewModel:ViewModel() {
 
     private val _markers = MutableLiveData(emptyList<MyMarker>())
     val markers = _markers
-    private val _markersList = MutableLiveData<List<MyMarker>>()
+     val _markersList = MutableLiveData<List<MyMarker>>()
     val markersList = _markersList
     var show = MutableLiveData(false)
 

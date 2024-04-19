@@ -133,8 +133,9 @@ private fun markerItem(marker: MyMarker, navController: NavController, vM: MainV
                            Spacer(modifier = Modifier.width(10.dp))
                            Text(text = "Edit")
                        }
-                               DropdownMenuItem(onClick = {
+                       DropdownMenuItem(onClick = {
                            vM.deleteMarker(marker.markerId!!)
+                           navController.navigate(Routes.MarkerListScreen.route)
                            show = false
                        }) {
                            Icon(Icons.Filled.Delete, contentDescription = "Delete")
