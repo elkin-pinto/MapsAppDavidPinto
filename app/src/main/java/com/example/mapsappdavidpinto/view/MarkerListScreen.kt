@@ -15,14 +15,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -40,7 +42,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -50,82 +51,100 @@ import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 @Composable
 fun MarkerListScreen(navController: NavController, vM: MainViewModel) {
-    MyDrawerMenu(vM,navController) { Screen(navController,vM) }
+    MyDrawerMenu(vM, navController) { Screen(navController, vM) }
 }
 
 @Composable
-private fun Screen(navController: NavController,vM:MainViewModel) {
-    val markers by vM.markersList.observeAsState(emptyList())
-    val tipus = MutableLiveData("")
+private fun Screen(navController: NavController, vM: MainViewModel) {
+    val markersList by vM.markersList.observeAsState(emptyList())
+    val tipus by vM.tipusSelected.observeAsState()
     val text by vM.searchBarMarkersList.observeAsState("")
     vM.searchMarkers(text)
     Column {
         TextField(value = text, onValueChange = {
             vM.searchBarMarkersList.value = it
-            vM.searchMarkers(text)}, Modifier.fillMaxWidth())
-        MyDropMenuTipus(vM,tipus,vM.tipusMarkerList)
+            vM.searchMarkers(text)
+        }, Modifier.fillMaxWidth())
+        MyDropMenuTipus(vM.tipusSelected, vM.tipusMarkerList, tipus)
         Spacer(Modifier.height(10.dp))
         Box(Modifier.fillMaxSize()) {
-            LazyColumn (horizontalAlignment = Alignment.CenterHorizontally,modifier = Modifier.fillMaxWidth()){
-                items(markers) {
-                    markerItem(it,navController,vM)
+            LazyColumn(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                items(markersList) {
+                    markerItem(it, navController, vM)
                 }
             }
             Box(
                 Modifier
                     .fillMaxHeight(0.96f)
-                    .fillMaxWidth(0.98f), contentAlignment = Alignment.BottomEnd) {
-                AddMarkerButton(vM,navController)
+                    .fillMaxWidth(0.98f), contentAlignment = Alignment.BottomEnd
+            ) {
+                AddMarkerButton(vM, navController)
+
             }
         }
     }
-
-
-
 }
 
 @OptIn(ExperimentalGlideComposeApi::class, ExperimentalMaterialApi::class)
 @Composable
-private fun markerItem(marker: MyMarker,navController: NavController,vM: MainViewModel) {
+private fun markerItem(marker: MyMarker, navController: NavController, vM: MainViewModel) {
     var show by remember { mutableStateOf(false) }
     Spacer(Modifier.height(5.dp))
-    Box(modifier = Modifier
-        .border(BorderStroke(2.dp, Color.Black))
-        .fillMaxWidth(0.8f)
-        .padding(5.dp)
-        .clickable {
-            vM.latPosition = marker.state.latitude
-            vM.lngPosition = marker.state.longitude
-            navController.navigate(Routes.MapScreen.route)
-        }
-    ) {
-        Row (horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()) {
-            Column {
-                Text(marker.title, fontWeight = FontWeight.Bold, fontSize = 30.sp)
-                Text(marker.snippet)
+        Box(modifier = Modifier
+            .border(BorderStroke(2.dp, Color.Black))
+            .fillMaxWidth(0.8f)
+            .padding(5.dp)
+            .clickable {
+                vM.latPosition = marker.lat
+                vM.lngPosition = marker.lng
+                navController.navigate(Routes.MapScreen.route)
             }
-            if (marker.image != null) {
-                GlideImage(model = marker.image, contentDescription = "Marker Value", contentScale = ContentScale.Fit, modifier = Modifier.size(100.dp))
-            }
-            IconButton(onClick = { show = true}) {
-                Icon(imageVector = Icons.Filled.Settings, contentDescription = "Settings")
-            }
-            DropdownMenu(expanded = show, onDismissRequest = { show = false }) {
-                DropdownMenuItem(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Filled.Settings, contentDescription = "Edit")
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(text = "Edit")
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column {
+                    Text(marker.title, fontWeight = FontWeight.Bold, fontSize = 30.sp)
+                    Text(marker.snippet)
                 }
-                DropdownMenuItem(onClick = {
-                    vM.deleteMarker(marker.markerId!!)
-                    show = false
-                }) {
-                    Icon(Icons.Filled.Delete, contentDescription = "Delete")
-                    Spacer(modifier = Modifier.width(10.dp))
-                    Text(text = "Delete")
+                if (marker.image != null) {
+                    GlideImage(
+                        model = marker.image,
+                        contentDescription = "Marker Value",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier.size(100.dp)
+                    )
                 }
-            }
-        }
-    }
+               Box(modifier = Modifier
+                   .wrapContentSize(Alignment.TopStart)) {
+                   IconButton(onClick = { show = true }) {
+                       Icon(Icons.Default.MoreVert, contentDescription = "Localized description")
+                   }
+                   DropdownMenu(
+                       expanded = show,
+                       onDismissRequest = { show = false }
+                   ) {
+                       DropdownMenuItem(onClick = { /*TODO*/ }) {
+                           Icon(Icons.Filled.Settings, contentDescription = "Edit", Modifier)
+                           Spacer(modifier = Modifier.width(10.dp))
+                           Text(text = "Edit")
+                       }
+                               DropdownMenuItem(onClick = {
+                           vM.deleteMarker(marker.markerId!!)
+                           show = false
+                       }) {
+                           Icon(Icons.Filled.Delete, contentDescription = "Delete")
+                           Spacer(modifier = Modifier.width(10.dp))
+                           Text(text = "Delete")
+                       }
+                   }
+               }
+           }
+       }
+
 }
 

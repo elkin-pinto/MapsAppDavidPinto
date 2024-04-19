@@ -1,12 +1,11 @@
 package com.example.mapsappdavidpinto.view
 
 import android.content.Context
-import android.graphics.Bitmap
+import android.net.Uri
 import android.util.Log
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
-import androidx.camera.core.ImageProxy
 import androidx.camera.view.CameraController
 import androidx.camera.view.LifecycleCameraController
 import androidx.camera.view.PreviewView
@@ -35,6 +34,7 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
+import java.io.File
 
 @Composable
 fun TakePhotoScreen(navController: NavController, vM: MainViewModel,) {
@@ -79,8 +79,8 @@ fun TakePhotoScreen(navController: NavController, vM: MainViewModel,) {
                     Icon(imageVector = Icons.Default.Photo, contentDescription = "Open Gallery")
                 }
                 IconButton(onClick = {
-                    takePhoto(context,controller) {
-                        takePhoto(context, controller) {
+                    takePhoto(vM,context,controller) {
+                        takePhoto(vM,context, controller) {
                             navController.navigate(Routes.AddMarkerScreen.route)
                         }
                     }
@@ -93,19 +93,29 @@ fun TakePhotoScreen(navController: NavController, vM: MainViewModel,) {
     }
 }
 
-private fun takePhoto(context:Context,
-                      controller: LifecycleCameraController, onPhotoTaken: (Bitmap) -> Unit) {
+private fun takePhoto(vM:MainViewModel,context: Context,
+                      controller: LifecycleCameraController, onPhotoTaken: (Uri) -> Unit) {
+    val outputDirectory = File(context.filesDir, "photos") // Directorio donde se guardará la imagen
+    if (!outputDirectory.exists()) {
+        outputDirectory.mkdirs()
+    }
+
+    val photoFile = File(outputDirectory, "${System.currentTimeMillis()}.jpg")
+
+    val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
     controller.takePicture(
+        outputOptions,
         ContextCompat.getMainExecutor(context),
-        object : ImageCapture.OnImageCapturedCallback() {
-            override fun onCaptureSuccess(image: ImageProxy) {
-                super.onCaptureSuccess(image)
-                onPhotoTaken(image.toBitmap())
+        object : ImageCapture.OnImageSavedCallback {
+            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                val savedUri = Uri.fromFile(photoFile)
+                vM.uploadImage(savedUri)
+                onPhotoTaken(savedUri)
             }
 
             override fun onError(exception: ImageCaptureException) {
-                super.onError(exception)
-                Log.e("Camera","Error taken photo", exception)
+                Log.e("Camera", "Error al guardar la imagen", exception)
             }
         }
     )

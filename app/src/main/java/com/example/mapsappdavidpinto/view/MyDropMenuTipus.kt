@@ -19,17 +19,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
-import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
-fun MyDropMenuTipus (vM:MainViewModel, item: MutableLiveData<String>,itemList: List<String>) {
+fun MyDropMenuTipus (item: MutableLiveData<String>, itemList: List<String>, tipus: String?) {
     var expanded by remember { mutableStateOf(false) }
 
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth().padding(20.dp)) {
         ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
             TextField(
-                value = item.value!!,
+                value = tipus!!,
                 onValueChange = {},
                 readOnly = true,
                 trailingIcon = {

@@ -39,7 +39,7 @@ fun MyDrawerMenu(vM: MainViewModel,navigationController: NavController,function:
                 navigationController.navigate(Routes.AddMarkerScreen.route)
             })
             HorizontalDivider()
-            NavigationDrawerItem(label = { Text("Exit")}, selected = false, onClick = {
+            NavigationDrawerItem(label = { Text("Close")}, selected = false, onClick = {
                 scope.launch { state.close() }
             })
             HorizontalDivider()

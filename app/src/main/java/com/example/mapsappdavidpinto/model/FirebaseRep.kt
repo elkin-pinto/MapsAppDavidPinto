@@ -13,8 +13,8 @@ class FirebaseRep {
                 "title" to marker.title,
                 "image" to marker.image,
                 "snippet" to marker.snippet,
-                "lat" to marker.state.latitude,
-                "lng" to marker.state.longitude,
+                "lat" to marker.lat,
+                "lng" to marker.lng,
                 "tipus" to marker.tipus,
                 "userId" to marker.userId
             )
@@ -27,8 +27,8 @@ class FirebaseRep {
                 "title" to editedMarker.title,
                 "image" to editedMarker.image,
                 "snippet" to editedMarker.snippet,
-                "lat" to editedMarker.state.latitude,
-                "lng" to editedMarker.state.longitude,
+                "lat" to editedMarker.lat,
+                "lng" to editedMarker.lng,
                 "tipus" to editedMarker.tipus,
                 "userId" to editedMarker.userId
             )

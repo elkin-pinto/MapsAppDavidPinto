@@ -49,7 +49,7 @@ private fun Screen(navController: NavController, vM: MainViewModel) {
             {
                 vM.markers.value?.forEach {
                     Marker(
-                        state = MarkerState(position = it.state),
+                        state = MarkerState(position = LatLng(it.lat,it.lng)),
                         title = it.title,
                         snippet = it.snippet
                     )

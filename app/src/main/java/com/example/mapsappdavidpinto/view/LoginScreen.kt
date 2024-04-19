@@ -16,6 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,6 +37,7 @@ import com.example.mapsappdavidpinto.viewModel.MainViewModel
 fun LoginScreen(navController: NavController, vM: MainViewModel) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val userLoggedSuccesful by vM.userLoggingComplete.observeAsState(false)
 
     Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.height(50.dp))
@@ -51,11 +53,8 @@ fun LoginScreen(navController: NavController, vM: MainViewModel) {
 
         Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             OutlinedButton(onClick = {
-                try {
-                    vM.login(email, password)
-                    navController.navigate(Routes.MapScreen.route)
-                } catch (_: Exception) {
-                }
+                vM.login(email, password)
+
             },
                 border = BorderStroke(2.dp, Color.Red),
                 modifier = Modifier.padding(8.dp) ) {
@@ -64,12 +63,12 @@ fun LoginScreen(navController: NavController, vM: MainViewModel) {
             Spacer(modifier = Modifier.width(25.dp))
             OutlinedButton(onClick = {
                         vM.register(email,password)
-                if(vM.userLoggingComplete.value == true) navController.navigate(Routes.MapScreen.route)
             },
                 border = BorderStroke(2.dp, Color.Red),
                 modifier = Modifier.padding(8.dp)) {
                 Text(text = "Register")
             }
+            if(userLoggedSuccesful == true) navController.navigate(Routes.MapScreen.route)
         }
     }
 }

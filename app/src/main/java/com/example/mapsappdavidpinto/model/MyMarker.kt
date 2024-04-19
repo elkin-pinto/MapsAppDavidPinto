@@ -1,10 +1,9 @@
 package com.example.mapsappdavidpinto.model
 
-import com.google.android.gms.maps.model.LatLng
-
 data class MyMarker (
     var markerId: String?,
-    var state:LatLng,
+    var lat:Double,
+    var lng:Double,
     var title:String,
     var snippet:String,
     var tipus:String,
@@ -12,9 +11,10 @@ data class MyMarker (
     var userId:String
     ) {
 
-    constructor(): this(null, LatLng(0.0, 0.0),"","","","","")
-    constructor(state:LatLng,title:String,snippet:String,tipus:String,image:String?,userId: String) : this() {
-        this.state = state
+    constructor(): this(null, 0.0, 0.0,"","","","","")
+    constructor(lat:Double,lng:Double,title:String,snippet:String,tipus:String,image:String?,userId: String) : this() {
+        this.lat = lat
+        this.lng = lng
         this.title = title
         this.snippet = snippet
         this.tipus = tipus

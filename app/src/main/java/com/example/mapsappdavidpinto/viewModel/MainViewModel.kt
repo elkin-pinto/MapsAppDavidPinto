@@ -46,6 +46,7 @@ class MainViewModel:ViewModel() {
 
     //TipusMarkers
     val tipusMarkerList = mutableListOf("","escola")
+    val tipusSelected = MutableLiveData<String>("")
 
     // Dialog MapScreen
     var lat = MutableLiveData(0.0)
@@ -61,7 +62,7 @@ class MainViewModel:ViewModel() {
 
     fun newMarker(marker: MyMarker) {
         val newMarker = _markers.value?.toMutableList()
-        newMarker?.add(MyMarker(marker.state,marker.title, marker.snippet,marker.tipus,marker.image,marker.userId))
+        newMarker?.add(MyMarker(marker.lat,marker.lng,marker.title, marker.snippet,marker.tipus,marker.image,marker.userId))
         _markers.value = newMarker!!
     }
 
@@ -70,7 +71,7 @@ class MainViewModel:ViewModel() {
         try {
             val listmarkers = mutableListOf<MyMarker>()
             for(i in markers.value!!){
-                if ((tipus.value == "" || i.tipus == tipus.value) && patter.matcher(i.title).matches()) {
+                if ((tipusSelected.value == "" || i.tipus == tipusSelected.value) && patter.matcher(i.title).matches()) {
                     listmarkers.add(i)
                 }
             }
@@ -105,7 +106,7 @@ class MainViewModel:ViewModel() {
     fun getMarker(markerId:String) {
         firebaseRep.getMarker(markerId).addSnapshotListener { value, error ->
             if (error != null) {
-                Log.w("UserRepository","Lsiten failed", error)
+                Log.w("UserRepository","Listen failed", error)
                 return@addSnapshotListener
             }
             if (value != null && value.exists()) {
@@ -116,8 +117,8 @@ class MainViewModel:ViewModel() {
                 }
                 actualMarker.value = marker
                 title.value = actualMarker.value!!.title
-                lat.value = actualMarker.value!!.state.latitude
-                lng.value = actualMarker.value!!.state.longitude
+                lat.value = actualMarker.value!!.lat
+                lng.value = actualMarker.value!!.lng
                 snippet.value = actualMarker.value!!.snippet
                 image.value = actualMarker.value!!.image
                 tipus.value = actualMarker.value!!.tipus
@@ -173,17 +174,15 @@ class MainViewModel:ViewModel() {
 
     fun login(username:String?, password: String?) {
         auth.signInWithEmailAndPassword(username!!,password!!)
-            .addOnCompleteListener {task ->
-                if (task.isSuccessful) {
-                    _userId.value = task.result.user?.uid
-                    _loggedUser.value = task.result.user?.email?.split("@")?.get(0)
-                    _goToNext.value = true
-                    this.getMarkers()
-                    modifiyProcessing()
-                } else {
-                    _goToNext.value = false
-                    Log.d("Error","Error signing in ${task.exception}")
-                }
+            .addOnSuccessListener {task ->
+                _userId.value = task.user?.uid
+                _loggedUser.value = task.user?.email?.split("@")?.get(0)
+                _goToNext.value = true
+                this.getMarkers()
+                modifiyProcessing()
+            }.addOnFailureListener {
+                _goToNext.value = false
+                Log.d("Error","Error signing in ${it.message}")
             }
     }
 
