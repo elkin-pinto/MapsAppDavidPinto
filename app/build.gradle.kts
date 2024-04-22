@@ -73,6 +73,10 @@ dependencies {
     //BottomNavigation
     implementation("androidx.compose.material:material:1.6.3")
 
+    //DataStore
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+
     //Firebase
     implementation(platform("com.google.firebase:firebase-bom:32.8.0"))
         //Cloud Firebase

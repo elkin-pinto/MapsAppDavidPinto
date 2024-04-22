@@ -153,19 +153,19 @@ class MainViewModel:ViewModel() {
     val userLoggingComplete = MutableLiveData(false)
 
     private fun modifiyProcessing() {
-        userLoggingComplete.value = true
+        userLoggingComplete.value = !userLoggingComplete.value!!
     }
     fun register(username: String, password: String) {
         auth.createUserWithEmailAndPassword(username,password)
-            .addOnCompleteListener {task ->
-                if (task.isSuccessful) {
-                    _goToNext.value = false
-                    this.getMarkers()
-                    modifiyProcessing()
-                } else {
-                    Log.d("Error","Error creating user ${task.exception}")
-                }
-
+            .addOnSuccessListener {task ->
+                _userId.value = task.user?.uid
+                _loggedUser.value = task.user?.email?.split("@")?.get(0)
+                _goToNext.value = true
+                this.getMarkers()
+                modifiyProcessing()
+            }.addOnFailureListener {
+                _goToNext.value = false
+                Log.d("Error","Error registering in ${it.message}")
             }
     }
 
@@ -187,7 +187,9 @@ class MainViewModel:ViewModel() {
     }
 
     fun logOut() {
+        modifiyProcessing()
         auth.signOut()
+
     }
 
 

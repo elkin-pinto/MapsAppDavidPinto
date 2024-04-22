@@ -1,10 +1,15 @@
 package com.example.mapsappdavidpinto.view
 
+import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -26,9 +31,14 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
     val title = vM.title.observeAsState("")
     val description = vM.snippet.observeAsState("")
     val tipus by vM.tipus.observeAsState("")
+    val isCameraPermissionGranted by vM.cameraPermissionGranted.observeAsState(false)
+    val showPermissionDenied by vM.showPermissionDenied.observeAsState(false)
+
+    val launcher = CameraOption(vM, navController)
+
     Column(
         Modifier
-            .background(Color.Transparent)
+            .background(Color.White)
             .padding(16.dp)
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
@@ -37,7 +47,19 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
         MyTextField(vM.snippet,description,"The marker description")
         MyDropMenuTipus(vM.tipus, vM.tipusMarkerList, tipus)
 
-        function()
+        Row (Modifier.padding(5.dp)){
+            Button(onClick = {
+                if(!isCameraPermissionGranted) {
+                    launcher.launch(Manifest.permission.CAMERA)
+                }else {
+                    navController.navigate(Routes.TakePhotoScreen.route)
+                }
+                if (showPermissionDenied) navController.navigate(Routes.PermissionDeclinedScreen.route)
+            }) {
+                Icon(Icons.Filled.CameraAlt, "Location Icon" )
+            }
+            function()
+        }
 
         Button(onClick = {
             try {

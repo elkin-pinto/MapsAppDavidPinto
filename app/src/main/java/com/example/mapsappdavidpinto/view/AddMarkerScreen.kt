@@ -8,16 +8,13 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -101,28 +98,14 @@ fun TypeCreateFun(vM:MainViewModel) {
 @Composable
 private fun MarkerCreateFun(vM:MainViewModel,navController: NavController) {
     val showMap = vM.mapDialog.observeAsState(false)
-    val isCameraPermissionGranted by vM.cameraPermissionGranted.observeAsState(false)
-    val showPermissionDenied by vM.showPermissionDenied.observeAsState(false)
 
-    val launcher = CameraOption(vM, navController)
     NewMarker(vM,navController){
-        Row (Modifier.padding(5.dp)){
-            Button(onClick = {
-                if(!isCameraPermissionGranted) {
-                    launcher.launch(Manifest.permission.CAMERA)
-                }else {
-                    navController.navigate(Routes.TakePhotoScreen.route)
-                }
-                if (showPermissionDenied) navController.navigate(Routes.PermissionDeclinedScreen.route)
-            }) {
-                Icon(Icons.Filled.CameraAlt, "Location Icon" )
-            }
-            Spacer(Modifier.width(15.dp))
-            Button(onClick = {
-                vM.mapDialog.value = true
-                 }) {
-                Icon(Icons.Filled.LocationOn, "Location Icon" )
-            }
+        Spacer(Modifier.width(15.dp))
+
+        Button(onClick = {
+            vM.mapDialog.value = true
+        }) {
+            Icon(Icons.Filled.LocationOn, "Location Icon" )
         }
     }
     if (showMap.value) {
