@@ -10,4 +10,5 @@ sealed class Routes (val route: String) {
     object PermissionDeclinedScreen:Routes("PermissionDeclinedScreen")
     object TakePhotoScreen:Routes("TakePhotoScreen")
     object GalleryScreen:Routes("GalleryScreen")
+    object EditMarker:Routes("EditMarker")
 }

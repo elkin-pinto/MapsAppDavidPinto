@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CameraAlt
 import androidx.compose.material3.Button
@@ -19,16 +20,21 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.model.MyMarker
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composable () -> Unit){
     val title = vM.title.observeAsState("")
+    val image by vM.image.observeAsState(null)
     val description = vM.snippet.observeAsState("")
     val tipus by vM.tipus.observeAsState("")
     val isCameraPermissionGranted by vM.cameraPermissionGranted.observeAsState(false)
@@ -59,6 +65,12 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
                 Icon(Icons.Filled.CameraAlt, "Location Icon" )
             }
             function()
+        }
+
+        if (image != null) {
+            GlideImage(model = image, contentDescription = "Marker Image",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(100.dp))
         }
 
         Button(onClick = {

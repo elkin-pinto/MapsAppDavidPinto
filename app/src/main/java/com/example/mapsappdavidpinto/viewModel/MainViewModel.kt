@@ -21,10 +21,29 @@ class MainViewModel:ViewModel() {
 
     private val _markers = MutableLiveData(emptyList<MyMarker>())
     val markers = _markers
-     val _markersList = MutableLiveData<List<MyMarker>>()
+    val _markersList = MutableLiveData<List<MyMarker>>()
     val markersList = _markersList
     var show = MutableLiveData(false)
 
+    // EditMarker
+    var markerEdit = MyMarker()
+
+    var titleEdit = MutableLiveData<String>("")
+    var snippetEdit = MutableLiveData<String>("")
+    var tipusEdit = MutableLiveData<String>("")
+
+    fun actualitzarMarkerEdit() {
+        markerEdit.title = titleEdit.value!!
+        markerEdit.snippet = snippetEdit.value!!
+        markerEdit.tipus = tipusEdit.value!!
+        markerEdit.image = image.value
+    }
+    fun actualitzarEditValues() {
+        titleEdit.value = markerEdit.title
+        snippetEdit.value = markerEdit.snippet
+        tipusEdit.value = markerEdit.tipus
+        image.value = markerEdit.image
+    }
 
     //Routes
     var currentRoute = MutableLiveData<String>(Routes.MapScreen.route)

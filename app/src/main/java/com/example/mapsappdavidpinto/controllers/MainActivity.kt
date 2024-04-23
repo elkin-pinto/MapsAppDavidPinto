@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.mapsappdavidpinto.ui.theme.MapsAppDavidPintoTheme
 import com.example.mapsappdavidpinto.view.AddMarkerScreen
+import com.example.mapsappdavidpinto.view.EditMarker
 import com.example.mapsappdavidpinto.view.GalleryScreen
 import com.example.mapsappdavidpinto.view.LoginScreen
 import com.example.mapsappdavidpinto.view.MapScreen
@@ -46,6 +47,7 @@ fun Body(vM:MainViewModel) {
         composable(Routes.PermissionDeclinedScreen.route) { PermissionDeclinedScreen() }
         composable(Routes.TakePhotoScreen.route) { TakePhotoScreen(navigationController,vM) }
         composable(Routes.GalleryScreen.route) { GalleryScreen(vM,navigationController) }
+        composable(Routes.EditMarker.route) { EditMarker(vM,navigationController) }
     }
 }
 

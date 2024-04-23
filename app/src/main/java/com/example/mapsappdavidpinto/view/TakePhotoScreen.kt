@@ -37,7 +37,7 @@ import com.example.mapsappdavidpinto.viewModel.MainViewModel
 import java.io.File
 
 @Composable
-fun TakePhotoScreen(navController: NavController, vM: MainViewModel,) {
+fun TakePhotoScreen(navController: NavController, vM: MainViewModel) {
     val context = LocalContext.current
     val controller = remember {
         LifecycleCameraController(context).apply {
@@ -81,7 +81,7 @@ fun TakePhotoScreen(navController: NavController, vM: MainViewModel,) {
                 IconButton(onClick = {
                     takePhoto(vM,context,controller) {
                         takePhoto(vM,context, controller) {
-                            navController.navigate()
+                            navController.navigateUp()
                         }
                     }
 

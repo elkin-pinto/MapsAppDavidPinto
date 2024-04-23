@@ -128,7 +128,11 @@ private fun markerItem(marker: MyMarker, navController: NavController, vM: MainV
                        expanded = show,
                        onDismissRequest = { show = false }
                    ) {
-                       DropdownMenuItem(onClick = { /*TODO*/ }) {
+                       DropdownMenuItem(onClick = {
+                           vM.markerEdit = marker
+                           vM.actualitzarEditValues()
+                           navController.navigate(Routes.EditMarker.route)
+                       }) {
                            Icon(Icons.Filled.Settings, contentDescription = "Edit", Modifier)
                            Spacer(modifier = Modifier.width(10.dp))
                            Text(text = "Edit")
