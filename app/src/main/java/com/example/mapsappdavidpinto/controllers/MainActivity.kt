@@ -15,7 +15,6 @@ import com.example.mapsappdavidpinto.view.GalleryScreen
 import com.example.mapsappdavidpinto.view.LoginScreen
 import com.example.mapsappdavidpinto.view.MapScreen
 import com.example.mapsappdavidpinto.view.MarkerListScreen
-import com.example.mapsappdavidpinto.view.MenuScreen
 import com.example.mapsappdavidpinto.view.PermissionDeclinedScreen
 import com.example.mapsappdavidpinto.view.SplashScreen
 import com.example.mapsappdavidpinto.view.TakePhotoScreen
@@ -38,9 +37,7 @@ fun Body(vM:MainViewModel) {
     val navigationController = rememberNavController()
     NavHost(navController = navigationController, startDestination = Routes.SplashScreen.route) {
         composable(Routes.SplashScreen.route) { SplashScreen(navigationController,vM) }
-        composable(Routes.SplashScreen.route) { SplashScreen(navigationController,vM) }
         composable(Routes.LoginScreen.route) { LoginScreen(navigationController,vM) }
-        composable(Routes.MenuScreen.route) { MenuScreen(navigationController,vM) }
         composable(Routes.MapScreen.route) { MapScreen(navigationController,vM) }
         composable(Routes.MarkerListScreen.route) { MarkerListScreen(navigationController,vM) }
         composable(Routes.AddMarkerScreen.route) { AddMarkerScreen(navigationController,vM) }

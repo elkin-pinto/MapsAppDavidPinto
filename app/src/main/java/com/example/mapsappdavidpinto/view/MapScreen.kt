@@ -21,9 +21,6 @@ import com.google.maps.android.compose.rememberCameraPositionState
 
 @Composable
 fun MapScreen(navController: NavController, vM: MainViewModel) {
-    vM.title.value = ""
-    vM.snippet.value = ""
-    vM.tipus.value = ""
     MyDrawerMenu(vM,navController) { Screen(navController, vM) }
 }
 @Composable

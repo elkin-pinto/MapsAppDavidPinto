@@ -20,6 +20,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cameraswitch
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Photo
 import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.runtime.Composable
@@ -43,6 +44,10 @@ fun TakePhotoScreen(navController: NavController, vM: MainViewModel) {
         LifecycleCameraController(context).apply {
             CameraController.IMAGE_CAPTURE
         }
+    }
+    if (vM.returnAgain) {
+        vM.returnAgain = false
+        navController.navigateUp()
     }
     Box(modifier = Modifier.fillMaxSize()) {
         CameraPreview(controller = controller, modifier = Modifier.fillMaxSize())
@@ -77,6 +82,11 @@ fun TakePhotoScreen(navController: NavController, vM: MainViewModel) {
 
                 IconButton(onClick = { navController.navigate(Routes.GalleryScreen.route) }) {
                     Icon(imageVector = Icons.Default.Photo, contentDescription = "Open Gallery")
+                }
+                IconButton(onClick = {
+                    vM.image.value = null
+                    navController.navigateUp() }) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Open Gallery")
                 }
                 IconButton(onClick = {
                     takePhoto(vM,context,controller) {

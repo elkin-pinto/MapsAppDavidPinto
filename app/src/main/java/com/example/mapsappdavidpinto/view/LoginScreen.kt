@@ -1,5 +1,6 @@
 package com.example.mapsappdavidpinto.view
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -41,10 +42,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(navController: NavController, vM: MainViewModel) {
+    BackHandler(enabled = false) {
+        navController.navigate(Routes.LoginScreen.route)
+    }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val userLoggedSuccesful by vM.userLoggingComplete.observeAsState(false)
-
+    var dataPut by remember { mutableStateOf(true) }
 
 
     val context = LocalContext.current
@@ -52,9 +56,10 @@ fun LoginScreen(navController: NavController, vM: MainViewModel) {
     val storedUserData = userPrefs.getUserData.collectAsState(initial = emptyList())
 
     if (storedUserData.value.isNotEmpty() && storedUserData.value[0] != ""
-        && storedUserData.value[1] != "") {
+        && storedUserData.value[1] != "" && dataPut) {
         email = storedUserData.value[0]
         password = storedUserData.value[1]
+        dataPut = false
     }
 
 
@@ -71,29 +76,23 @@ fun LoginScreen(navController: NavController, vM: MainViewModel) {
         Spacer(modifier = Modifier.height(25.dp))
 
         Row (modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-            OutlinedButton(onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
-                    userPrefs.savaUserData(email,password)
-                }
-                vM.login(email, password)
-
-            },
+            OutlinedButton(onClick = {if (email != "" && password != "") vM.login(email, password) },
                 border = BorderStroke(2.dp, Color.Red),
                 modifier = Modifier.padding(8.dp) ) {
                 Text(text = "Sign in")
             }
             Spacer(modifier = Modifier.width(25.dp))
-            OutlinedButton(onClick = {
-                CoroutineScope(Dispatchers.IO).launch {
-                    userPrefs.savaUserData(email,password)
-                }
-                        vM.register(email,password)
-            },
+            OutlinedButton(onClick = {if (email != "" && password != "") vM.register(email,password) },
                 border = BorderStroke(2.dp, Color.Red),
                 modifier = Modifier.padding(8.dp)) {
                 Text(text = "Register")
             }
-            if(userLoggedSuccesful == true) navController.navigate(Routes.MapScreen.route)
+            if(userLoggedSuccesful == true) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    userPrefs.savaUserData(email,password)
+                }
+                navController.navigate(Routes.MapScreen.route)
+            }
         }
     }
 }

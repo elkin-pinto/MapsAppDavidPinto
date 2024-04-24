@@ -49,7 +49,7 @@ fun NewMarker(vM: MainViewModel,navController: NavController,function: @Composab
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
 
-        MyTextField(vM.title,title,"The marker name")
+        MyTextField(vM.title,title, "The marker name")
         MyTextField(vM.snippet,description,"The marker description")
         MyDropMenuTipus(vM.tipus, vM.tipusMarkerList, tipus)
 

@@ -6,7 +6,6 @@ import android.graphics.ImageDecoder
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -33,7 +32,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.mapsappdavidpinto.controllers.Routes
 import com.example.mapsappdavidpinto.viewModel.MainViewModel
 
 @SuppressLint("ObsoleteSdkInt")
@@ -82,10 +80,10 @@ fun GalleryScreen(vM:MainViewModel,navController: NavController) {
             )
         }
         Button(onClick = {
-            Log.i("Uri traviesa",uri.toString())
             if(uri != null) {
                 vM.uploadImage(uri!!)
-                navController.navigate(Routes.AddMarkerScreen.route)
+                navController.navigateUp()
+                vM.returnAgain = true
             }
         }) {
             Text("Confirm Photo")

@@ -24,6 +24,8 @@ class MainViewModel:ViewModel() {
     val _markersList = MutableLiveData<List<MyMarker>>()
     val markersList = _markersList
     var show = MutableLiveData(false)
+    var returnAgain = false
+
 
     // EditMarker
     var markerEdit = MyMarker()
@@ -206,9 +208,10 @@ class MainViewModel:ViewModel() {
     }
 
     fun logOut() {
-        modifiyProcessing()
-        auth.signOut()
-
+        if (this.userLoggingComplete.value == true) {
+            modifiyProcessing()
+            auth.signOut()
+        }
     }
 
 
