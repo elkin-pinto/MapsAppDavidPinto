@@ -3,11 +3,11 @@ package com.example.mapsappdavidpinto.view
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.outlined.AddCircle
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +28,6 @@ fun AddMarkerButton(vM:MainViewModel,navHost:NavController) {
         Icon(Icons.Default.Add, "Add Marker Cross" , Modifier.size(45.dp).clickable {
             vM.lat.value = 0.0
             vM.lng.value = 0.0
-            navHost.navigate(Routes.AddMarkerScreen.route) },Color.Black)
+            navHost.navigate(Routes.AddMarkerScreen.route) },Color.White)
     }
 }
